@@ -293,14 +293,14 @@ service --status-all
 
 echo "----------------------------------------------------------------------------------------"
 #R2  Minimisation de la configuration
-echo -e "\nR2 Minimisation de la configuration : ${blue}Non évalué${normal}"
+echo -e "\nR2 Minimisation de la configuration : ${blue}Non évaluée${normal}"
 echo -e "Les fonctionnalités configurées au niveau des services démarrés doivent être limitées au
 strict nécessaire."
 
 
 echo "----------------------------------------------------------------------------------------"
 #R3  Principe de moindre privilège
-echo -e "\nR3 Principe de moindre privilège :${blue} Non évalué${normal}"
+echo -e "\nR3 Principe de moindre privilège :${blue} Non évaluée${normal}"
 echo -e "Les services et exécutables disponibles sur le système doivent faire l’objet d’une analyse
 afin de connaître les privilèges qui leurs sont associés, et doivent ensuite être configurés
 et intégrés en vue d’en utiliser le strict nécessaire."
@@ -308,7 +308,7 @@ et intégrés en vue d’en utiliser le strict nécessaire."
 echo "----------------------------------------------------------------------------------------"
 #R4  Utilisation des fonctionnalités de contrôle d’accès
 
-echo -e "\nR4 Utilisation des fonctionnalités de contrôle d'accès :${blue} Non évalué${normal}"
+echo -e "\nR4 Utilisation des fonctionnalités de contrôle d'accès :${blue} Non évaluée${normal}"
 echo -e "Utilisation des fonctionnalités de contrôle d’accès. Il est recommandé d’utiliser les 
 fonctionnalités de contrôle d’accès obligatoire (MAC) en plus du traditionnel modèle utilisateur
  Unix (DAC), voire éventuellement de les combiner avec des mécanismes de cloisonnement."
@@ -316,7 +316,7 @@ fonctionnalités de contrôle d’accès obligatoire (MAC) en plus du traditionn
 echo "----------------------------------------------------------------------------------------"
 #R5  Principe de défense en profondeur
 
-echo -e "\nR5 Principe de défense en profondeur :${blue} Non évalué${normal}"
+echo -e "\nR5 Principe de défense en profondeur :${blue} Non évaluée${normal}"
 echo -e "Sous Unix et dérivés, la défense en profondeur doit reposer sur une combinaison de
 barrières qu’il faut garder indépendantes les unes des autres. Par exemple :
 – authentification nécessaire avant d’effectuer des opérations, notamment quand elles
@@ -329,14 +329,14 @@ de séparation de privilèges ;
 
 echo "----------------------------------------------------------------------------------------"
 #R6  Cloisonnement des services réseau
-echo -e "\nR6  Cloisonnement des services réseau :${blue} Non évalué${normal}"
+echo -e "\nR6  Cloisonnement des services réseau :${blue} Non évaluée${normal}"
 echo -e "Les services réseau doivent autant que possible être hébergés sur des environnements
 distincts. Cela évite d’avoir d’autres services potentiellement affectés si l’un d’eux se
 retrouve compromis sous le même environnement."
 
 echo "----------------------------------------------------------------------------------------"
 #R7  Journalisation de l’activité des services
-echo -e "\nR7  Journalisation de l’activité des services${blue} Non évalué${normal}"
+echo -e "\nR7  Journalisation de l’activité des services${blue} Non évaluée${normal}"
 echo -e "Les activités du système et des services en cours d’exécution doivent être journalisées et
 archivées sur un système externe, non local."
 
@@ -362,7 +362,7 @@ fi
 
 echo "----------------------------------------------------------------------------------------"
 #R9  Configuration matérielle
-echo -e "\nR9 Configuration matérielle :${blue} Non évalué${normal}"
+echo -e "\nR9 Configuration matérielle :${blue} Non évaluée${normal}"
 echo -e "Il est conseillé d’appliquer les recommandations de configuration mentionnées dans
 la note technique « Recommandations de configuration matérielle de postes clients et
 serveurs x86_4»"
@@ -388,7 +388,7 @@ if [ $nb -eq 0 ]
 fi
 echo -e "\n"
 echo "----------------------------------------------------------------------------------------"
-echo -e "R12 Partitionnement type${blue} Non évalué${normal}"
+echo -e "R12 Partitionnement type${blue} Non évaluée${normal}"
 echo -e "#-----------------------------------------------------------------------------------------------------#"
 echo -e "# Point de montage |       Options              | Description                                         #"
 echo -e "#-----------------------------------------------------------------------------------------------------#"
@@ -441,14 +441,14 @@ else
 fi
 
 
-echo "#R14 Installation de paquets réduite au strict nécessaire${blue} Non évalué${normal}"
-echo "#R15 Choix des dépôts de paquets${blue} Non évalué${normal}"
-echo "#R16 Dépôts de paquets durcis${blue} Non évalué${normal}"
-echo "#R17 Mot de passe du chargeur de démarrage${blue} Non évalué${normal}"
-echo "#R18 Robustesse du mot de passe administrateur${blue} Non évalué${normal}"
-echo "#R19 Imputabilité des opérations d’administration${blue} Non évalué${normal}"
-echo "#R20 Installation d’éléments secrets ou de confiance${blue} Non évalué${normal}"
-echo "#R21 Durcissement et surveillance des services soumis à des flux arbitraires${blue} Non évalué${normal}"
+echo "#R14 Installation de paquets réduite au strict nécessaire${blue} Non évaluée${normal}"
+echo "#R15 Choix des dépôts de paquets${blue} Non évaluée${normal}"
+echo "#R16 Dépôts de paquets durcis${blue} Non évaluée${normal}"
+echo "#R17 Mot de passe du chargeur de démarrage${blue} Non évaluée${normal}"
+echo "#R18 Robustesse du mot de passe administrateur${blue} Non évaluée${normal}"
+echo "#R19 Imputabilité des opérations d’administration${blue} Non évaluée${normal}"
+echo "#R20 Installation d’éléments secrets ou de confiance${blue} Non évaluée${normal}"
+echo "#R21 Durcissement et surveillance des services soumis à des flux arbitraires${blue} Non évaluée${normal}"
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "\n#R22 Paramétrage des sysctl réseau"
@@ -983,40 +983,40 @@ fi
 
 
 
-echo "#R25 Configuration sysctl du module Yama${blue} Non évalué${normal}"
-echo "#R26 Désactivation des comptes utilisateurs inutilisés${blue} Non évalué${normal}"
-echo "#R27 Désactivation des comptes de services${blue} Non évalué${normal}"
-echo "#R28 Unicité et exclusivité des comptes de services système${blue} Non évalué${normal}"
-echo "#R29 Délai d’expiration de sessions utilisateurs${blue} Non évalué${normal}"
-echo "#R30 Applications utilisant PAM${blue} Non évalué${normal}"
-echo "#R31 Sécurisation des services réseau d’authentification PAM${blue} Non évalué${normal}"
-echo "#R32 Protection des mots de passe stockés${blue} Non évalué${normal}"
-echo "#R33 Sécurisation des accès aux bases utilisateurs distantes${blue} Non évalué${normal}"
-echo "#R34 Séparation des comptes système et d’administrateur de l’annuaire${blue} Non évalué${normal}"
-echo "#R35 Valeur de umask${blue} Non évalué${normal}"
-echo "#R36 Droits d’accès aux fichiers de contenu sensible${blue} Non évalué${normal}"
-echo "#R37 Exécutables avec bits setuid et setgid${blue} Non évalué${normal}"
-echo "#R38 Exécutables setuid root${blue} Non évalué${normal}"
-echo "#R39 Répertoires temporaires dédiés aux comptes${blue} Non évalué${normal}"
-echo "#R40 Sticky bit et droits d’accès en écriture${blue} Non évalué${normal}"
-echo "#R41 Sécurisation des accès pour les sockets et pipes nommées${blue} Non évalué${normal}"
-echo "#R42 Services et daemons résidents en mémoire${blue} Non évalué${normal}"
-echo "#R43 Durcissement et configuration du service syslog${blue} Non évalué${normal}"
-echo "#R44 Cloisonnement du service syslog par chroot${blue} Non évalué${normal}"
-echo "#R45 Cloisonnement du service syslog par container${blue} Non évalué${normal}"
-echo "#R46 Journaux d’activité de service${blue} Non évalué${normal}"
-echo "#R47 Partition dédiée pour les journaux${blue} Non évalué${normal}"
-echo "#R48 Configuration du service local de messagerie${blue} Non évalué${normal}"
-echo "#R49 Alias de messagerie des comptes de service${blue} Non évalué${normal}"
-echo "#R50 Journalisation de l’activité par auditd${blue} Non évalué${normal}"
-echo "#R51 Scellement et intégrité des fichiers${blue} Non évalué${normal}"
-echo "#R52 Protection de la base de données des scellés${blue} Non évalué${normal}"
-echo "#R53 Restriction des accès des services déployés${blue} Non évalué${normal}"
-echo "#R54 Durcissement des composants de virtualisation${blue} Non évalué${normal}"
-echo "#R55 Cage chroot et privilèges d’accès du service cloisonné${blue} Non évalué${normal}"
-echo "#R56 Activation et utilisation de chroot par un service${blue} Non évalué${normal}"
-echo "#R57 Groupe dédié à l’usage de sudo${blue} Non évalué${normal}"
-echo "#R58 Directives de configuration sudo${blue} Non évalué${normal}"
+echo "#R25 Configuration sysctl du module Yama${blue} Non évaluée${normal}"
+echo "#R26 Désactivation des comptes utilisateurs inutilisés${blue} Non évaluée${normal}"
+echo "#R27 Désactivation des comptes de services${blue} Non évaluée${normal}"
+echo "#R28 Unicité et exclusivité des comptes de services système${blue} Non évaluée${normal}"
+echo "#R29 Délai d’expiration de sessions utilisateurs${blue} Non évaluée${normal}"
+echo "#R30 Applications utilisant PAM${blue} Non évaluée${normal}"
+echo "#R31 Sécurisation des services réseau d’authentification PAM${blue} Non évaluée${normal}"
+echo "#R32 Protection des mots de passe stockés${blue} Non évaluée${normal}"
+echo "#R33 Sécurisation des accès aux bases utilisateurs distantes${blue} Non évaluée${normal}"
+echo "#R34 Séparation des comptes système et d’administrateur de l’annuaire${blue} Non évaluée${normal}"
+echo "#R35 Valeur de umask${blue} Non évaluée${normal}"
+echo "#R36 Droits d’accès aux fichiers de contenu sensible${blue} Non évaluée${normal}"
+echo "#R37 Exécutables avec bits setuid et setgid${blue} Non évaluée${normal}"
+echo "#R38 Exécutables setuid root${blue} Non évaluée${normal}"
+echo "#R39 Répertoires temporaires dédiés aux comptes${blue} Non évaluée${normal}"
+echo "#R40 Sticky bit et droits d’accès en écriture${blue} Non évaluée${normal}"
+echo "#R41 Sécurisation des accès pour les sockets et pipes nommées${blue} Non évaluée${normal}"
+echo "#R42 Services et daemons résidents en mémoire${blue} Non évaluée${normal}"
+echo "#R43 Durcissement et configuration du service syslog${blue} Non évaluée${normal}"
+echo "#R44 Cloisonnement du service syslog par chroot${blue} Non évaluée${normal}"
+echo "#R45 Cloisonnement du service syslog par container${blue} Non évaluée${normal}"
+echo "#R46 Journaux d’activité de service${blue} Non évaluée${normal}"
+echo "#R47 Partition dédiée pour les journaux${blue} Non évaluée${normal}"
+echo "#R48 Configuration du service local de messagerie${blue} Non évaluée${normal}"
+echo "#R49 Alias de messagerie des comptes de service${blue} Non évaluée${normal}"
+echo "#R50 Journalisation de l’activité par auditd${blue} Non évaluée${normal}"
+echo "#R51 Scellement et intégrité des fichiers${blue} Non évaluée${normal}"
+echo "#R52 Protection de la base de données des scellés${blue} Non évaluée${normal}"
+echo "#R53 Restriction des accès des services déployés${blue} Non évaluée${normal}"
+echo "#R54 Durcissement des composants de virtualisation${blue} Non évaluée${normal}"
+echo "#R55 Cage chroot et privilèges d’accès du service cloisonné${blue} Non évaluée${normal}"
+echo "#R56 Activation et utilisation de chroot par un service${blue} Non évaluée${normal}"
+echo "#R57 Groupe dédié à l’usage de sudo${blue} Non évaluée${normal}"
+echo "#R58 Directives de configuration sudo${blue} Non évaluée${normal}"
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nR58 Directives de configuration sudo"
         nb=$(grep -c "noexec" /etc/sudoers)
@@ -1058,16 +1058,16 @@ else
 L’usage de ( \* wildcard) dans les règles doit être autant que possible évité. L’absence d’arguments auprès d’une commande doit être spécifiée par la présence d’une chaînevide (\"\")."
 fi
 
-echo "#R64 Du bon usage de sudoedit${blue} Non évalué${normal}"
-echo "#R65 Activation des profils de sécurité AppArmor${blue} Non évalué${normal}"
-echo "#R66 Activation de la politique targeted avec SELinux${blue} Non évalué${normal}"
-echo "#R67 Paramétrage des booléens SELinux${blue} Non évalué${normal}"
+echo "#R64 Du bon usage de sudoedit${blue} Non évaluée${normal}"
+echo "#R65 Activation des profils de sécurité AppArmor${blue} Non évaluée${normal}"
+echo "#R66 Activation de la politique targeted avec SELinux${blue} Non évaluée${normal}"
+echo "#R67 Paramétrage des booléens SELinux${blue} Non évaluée${normal}"
 # setsebool  -P allow_execheap=off"
 # setsebool  -P allow_execmem=off
 # setsebool  -P allow_execstack=off
 # setsebool  -P secure_mode_insmod=off
 # setsebool  -P ssh_sysadm_login=off
- echo "#R68 Désinstallation des outils de débogage de politique SELinux${blue} Non évalué${normal}"
+ echo "#R68 Désinstallation des outils de débogage de politique SELinux${blue} Non évaluée${normal}"
 
 }
 fonct_fail () {
