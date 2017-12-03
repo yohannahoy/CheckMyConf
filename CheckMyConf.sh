@@ -172,7 +172,7 @@ if grep -q "StrictHostKeyChecking  ask" /etc/ssh/sshd_config
      then
 echo -e "Validation explicite par l’utilisateur de la clé hôte : ${green}ok${normal}";
     else
-echo -e "Validation explicite par l’utilisateur de la clé hôte : ${red}ko${normal}";
+echo -e "Validation explicite par l’utilisateur de la clé hôte : ${red}ko${normal} (à modifier si le poste contrôlé est client)";
 fi
 
 
