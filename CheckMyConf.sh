@@ -38,6 +38,13 @@ if [ $res_root -ne 0 ]
   	exit
 fi
 
+####################################################################################################################
+# Obj : vérifier que le script est executé par bash                                                                #
+####################################################################################################################
+if readlink /proc/$$/exe | grep -qs "dash"; then
+        echo "Utilisez bash, pas sh..."
+        exit 1
+fi
 
 fonct_uname () {
 clear
@@ -168,7 +175,7 @@ echo -e "Limiter au Protocol 2 : \t\t\t\t${red}ko${normal}";
 fi
 
 
-if grep -q "StrictHostKeyChecking  ask" /etc/ssh/sshd_config 
+if grep -q "StrictHostKeyChecking  ask" /etc/ssh/ssh_config 
      then
 echo -e "Validation explicite par l’utilisateur de la clé hôte : ${green}ok${normal}";
     else
@@ -213,7 +220,7 @@ if grep -q "LoginGraceTime 30" /etc/ssh/sshd_config
      then
 echo -e "Limite de la durée d'authentification : \t\t\t${green}ok${normal}";
     else
-echo -e "Limite de la  d'authentification : \t\t\t${red}ko${normal}";
+echo -e "Limite de la durée d'authentification : \t\t\t${red}ko${normal}";
 fi
 
 
