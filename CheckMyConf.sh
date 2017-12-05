@@ -91,10 +91,10 @@ clear
 echo -e "\n####################################################################################################################"
 echo "# Obj : informations réseau du serveur                                                                             #"
 echo "####################################################################################################################"
-echo "Adressage IP du serveur :"
+echo -e "\nAdressage IP du serveur :"
 ip a |grep -e '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'
 
-echo -e "\nRoute disponible :\n"
+echo -e "\nRoute disponible :"
 route -n
 
 }
@@ -218,9 +218,9 @@ fi
 
 if grep -q "LoginGraceTime 30" /etc/ssh/sshd_config
      then
-echo -e "Limite de la durée d'authentification : \t\t\t${green}ok${normal}";
+echo -e "Limite de la durée d'authentification : \t\t${green}ok${normal}";
     else
-echo -e "Limite de la durée d'authentification : \t\t\t${red}ko${normal}";
+echo -e "Limite de la durée d'authentification : \t\t${red}ko${normal}";
 fi
 
 
@@ -392,6 +392,8 @@ if [ $nb -eq 0 ]
  then   
         echo -e "\nR11 ${red}L’activation du service d’IOMMU permet de protéger la mémoire du système${normal}"
 	echo -e "Ajoutez la variable iommu=force  dans /etc/default/grub"
+ else
+        echo -e "\nR11 ${green}L’activation du service d’IOMMU permet de protéger la mémoire du système${normal}"
 fi
 echo -e "\n"
 echo "----------------------------------------------------------------------------------------"
@@ -498,7 +500,7 @@ fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas  envoyer  de  redirections  ICMP"
 echo -e "Préconisation : Pas de  redirection ICMP (all)"
-a=1
+a=0
 val=$(sysctl net.ipv4.conf.all.send_redirects | tail -c2)
 if [ $val = $a ]
  then
@@ -511,7 +513,7 @@ fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas  envoyer  de  redirections  ICMP"
 echo -e "Préconisation : Pas de  redirection ICMP (default)"
-a=1
+a=0
 val=$(sysctl net.ipv4.conf.default.send_redirects | tail -c2)
 if [ $val = $a ]
  then
@@ -524,7 +526,7 @@ fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nRefuser  les  paquets  de  source  routing"
 echo -e "Préconisation : Refuser  les  paquets  de  source  routing (all)"
-a=1
+a=0
 val=$(sysctl net.ipv4.conf.all.accept_source_route | tail -c2)
 if [ $val = $a ]
  then
@@ -537,7 +539,7 @@ fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nRefuser  les  paquets  de  source  routing"
 echo -e "Préconisation : Refuser  les  paquets  de  source  routing (default)"
-a=1
+a=0
 val=$(sysctl net.ipv4.conf.default.accept_source_route | tail -c2)
 if [ $val = $a ]
  then
@@ -550,7 +552,7 @@ fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas  accepter  les  ICMP de type  redirect"
 echo -e "Préconisation : Refuser  les  ICMP de type redirect (all)"
-a=1
+a=0
 val=$(sysctl net.ipv4.conf.all.accept_redirects | tail -c2)
 if [ $val = $a ]
  then
@@ -563,7 +565,7 @@ fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nRefuser  les  paquets  de  source  routing"
 echo -e "Préconisation : Refuser  les  paquets  de  source  routing (all)"
-a=1
+a=0
 val=$(sysctl net.ipv4.conf.all.secure_redirects | tail -c2)
 if [ $val = $a ]
  then
@@ -576,7 +578,7 @@ fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nRefuser  les  paquets  de  source  routing"
 echo -e "Préconisation : Refuser  les  paquets  de  source  routing (default)"
-a=1
+a=0
 val=$(sysctl net.ipv4.conf.default.accept_redirects | tail -c2)
 if [ $val = $a ]
  then
@@ -589,7 +591,7 @@ fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nRefuser  les  paquets  de  source  routing"
 echo -e "Préconisation : Refuser  les  paquets  de  source  routing (secure)"
-a=1
+a=0
 val=$(sysctl net.ipv4.conf.default.secure_redirects | tail -c2)
 if [ $val = $a ]
  then
