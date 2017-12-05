@@ -436,7 +436,6 @@ echo -e "#----------------------------------------------------------------------
 #R13 Restrictions d’accès sur les fichiers System.map
 
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\n#R13 Restrictions d’accès sur les fichiers System.map"
 a=$(find / -name System.map | wc -l)
 b=1
@@ -497,7 +496,7 @@ else
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo  "\nNe pas  envoyer  de  redirections  ICMP"
+echo -e "\nNe pas  envoyer  de  redirections  ICMP"
 echo -e "Préconisation : Pas de  redirection ICMP (all)"
 a=1
 val=$(sysctl net.ipv4.conf.all.send_redirects | tail -c2)
@@ -510,7 +509,7 @@ else
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo  "\nNe pas  envoyer  de  redirections  ICMP"
+echo -e "\nNe pas  envoyer  de  redirections  ICMP"
 echo -e "Préconisation : Pas de  redirection ICMP (default)"
 a=1
 val=$(sysctl net.ipv4.conf.default.send_redirects | tail -c2)
@@ -523,7 +522,7 @@ else
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo  "\nRefuser  les  paquets  de  source  routing"
+echo -e "\nRefuser  les  paquets  de  source  routing"
 echo -e "Préconisation : Refuser  les  paquets  de  source  routing (all)"
 a=1
 val=$(sysctl net.ipv4.conf.all.accept_source_route | tail -c2)
@@ -536,7 +535,7 @@ else
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo  "\nRefuser  les  paquets  de  source  routing"
+echo -e "\nRefuser  les  paquets  de  source  routing"
 echo -e "Préconisation : Refuser  les  paquets  de  source  routing (default)"
 a=1
 val=$(sysctl net.ipv4.conf.default.accept_source_route | tail -c2)
@@ -549,7 +548,7 @@ else
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo  "\nNe pas  accepter  les  ICMP de type  redirect"
+echo -e "\nNe pas  accepter  les  ICMP de type  redirect"
 echo -e "Préconisation : Refuser  les  ICMP de type redirect (all)"
 a=1
 val=$(sysctl net.ipv4.conf.all.accept_redirects | tail -c2)
@@ -562,7 +561,7 @@ else
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo  "\nRefuser  les  paquets  de  source  routing"
+echo -e "\nRefuser  les  paquets  de  source  routing"
 echo -e "Préconisation : Refuser  les  paquets  de  source  routing (all)"
 a=1
 val=$(sysctl net.ipv4.conf.all.secure_redirects | tail -c2)
@@ -575,7 +574,7 @@ else
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo  "\nRefuser  les  paquets  de  source  routing"
+echo -e "\nRefuser  les  paquets  de  source  routing"
 echo -e "Préconisation : Refuser  les  paquets  de  source  routing (default)"
 a=1
 val=$(sysctl net.ipv4.conf.default.accept_redirects | tail -c2)
@@ -588,7 +587,7 @@ else
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo  "\nRefuser  les  paquets  de  source  routing"
+echo -e "\nRefuser  les  paquets  de  source  routing"
 echo -e "Préconisation : Refuser  les  paquets  de  source  routing (secure)"
 a=1
 val=$(sysctl net.ipv4.conf.default.secure_redirects | tail -c2)
@@ -601,7 +600,7 @@ else
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo  "\nLoguer  les  paquets  ayant  des IPs  anormales"
+echo -e "\nLoguer  les  paquets  ayant  des IPs  anormales"
 echo -e "Préconisation : Loguer  les  paquets  ayant  des IPs  anormales (default)"
 a=1
 val=$(sysctl net.ipv4.conf.all.log_martians | tail -c2)
@@ -629,7 +628,7 @@ fi
 
 echo "----------------------------------------------------------------------------------------"
 # Ignorer  les réponses  non  conformes à la RFC  1122
-echo "\nIgnorer  les réponses  non  conformes à la RFC 1122"
+echo -e "\nIgnorer  les réponses  non  conformes à la RFC 1122"
 echo -e "Préconisation : Ignorer  les réponses  non  conformes"
 a=1
 val=$(sysctl net.ipv4.icmp_ignore_bogus_error_responses | tail -c2)
@@ -644,22 +643,21 @@ fi
 
 echo "----------------------------------------------------------------------------------------"
 # Augmenter  la plage  pour  les  ports éphémères
-echo "\nAugmenter  la plage  pour  les  ports éphémères"
+echo -e "\nAugmenter  la plage  pour  les  ports éphémères"
 a=$(sysctl net.ipv4.ip_local_port_range |cut -f 2)
 b=65535
 if [ "$a" -ne "$b" ]
 then
         echo -e "${red}La plage de ports éphèmères est à augmenter${normal}"
-	echo -e "Pour mise en place : sysctl -w kernel.modules_disabled=1"
 else
         echo -e "${green}La plage de ports éphèmères est conforme${normal}"
 fi
-echo -e "si besoin : sysctl -w net.ipv4.ip_local_port_range="1024 65535""
+echo -e "si besoin : sysctl -w net.ipv4.ip_local_port_range=\"1024 65535\""
 
 
 echo "----------------------------------------------------------------------------------------"
 # Utiliser  les SYN cookies
-echo "\nUtiliser  les SYN  cookies"
+echo -e "\nUtiliser  les SYN  cookies"
 a=1
 val=$(sysctl net.ipv4.tcp_syncookies | tail -c2)
 if [ $val = $a ]
@@ -672,20 +670,20 @@ fi
 
 
 echo "----------------------------------------------------------------------------------------"
-echo "\nDésactiver  le  support  des "router  solicitations" (all)"
-a=1
+echo "-e \nDésactiver  le  support  des "router  solicitations" (all)"
+a=0
 val=$(sysctl net.ipv6.conf.all.router_solicitations  | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Le support est activé${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.router_solicitations=1"
 else
-        echo -e "${green}Le support estdésactivé${normal}"
+        echo -e "${green}Le support est désactivé${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo "\nDésactiver  le  support  des "router  solicitations" (default)"
-a=1
+echo -e "\nDésactiver  le  support  des "router  solicitations" (default)"
+a=0
 val=$(sysctl net.ipv6.conf.default.router_solicitations | tail -c2)
 if [ $val = $a ]
  then
@@ -696,8 +694,8 @@ else
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo "\nNe pas  accepter  les "routers  preferences" par "router  advertisements"(all)"
-a=1
+echo -e "\nNe pas  accepter  les "routers  preferences" par "router  advertisements"(all)"
+a=0
 val=$(sysctl net.ipv6.conf.all.accept_ra_rtr_pref | tail -c2)
 if [ $val = $a ]
  then
@@ -708,8 +706,8 @@ else
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo "\nNe pas  accepter  les "router  preferences" par "router  advertisements"(default)"
-a=1
+echo -e "\nNe pas  accepter  les "router  preferences" par "router  advertisements"(default)"
+a=0
 val=$(sysctl net.ipv6.conf.default.accept_ra_rtr_pref | tail -c2)
 if [ $val = $a ]
  then
@@ -720,8 +718,8 @@ else
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo "\nPas de  configuration  auto  des  prefix  par "router  advertisements"(all)"
-a=1
+echo -e "\nPas de  configuration  auto  des  prefix  par "router  advertisements"(all)"
+a=0
 val=$(sysctl net.ipv6.conf.all.accept_ra_pinfo | tail -c2)
 if [ $val = $a ]
  then
@@ -733,7 +731,7 @@ fi
 
 echo "----------------------------------------------------------------------------------------"
 echo "Pas de  configuration  auto  des  prefix  par "router  advertisements"(default)"
-a=1
+a=0
 val=$(sysctl net.ipv6.conf.default.accept_ra_pinfo | tail -c2)
 if [ $val = $a ]
  then
@@ -745,11 +743,11 @@ fi
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nPas d’apprentissage  du  routeur  par défaut  par "router  advertisements"(all)"
-a=1
+a=0
 val=$(sysctl net.ipv6.conf.all.accept_ra_defrtr | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le support est activé activé${normal}"
+        echo -e "${red}Le support est activé ${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_ra_defrtr=1"
 else
         echo -e "${green}Le support estdésactivé${normal}"
@@ -757,11 +755,11 @@ fi
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "Pas d’apprentissage  du  routeur  par défaut  par "router  advertisements"(default)"
-a=1
+a=0
 val=$(sysctl net.ipv6.conf.default.accept_ra_defrtr | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le support est activé activé${normal}"
+        echo -e "${red}Le support est activé ${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_ra_defrtr=1"
 else
         echo -e "${green}Le support estdésactivé${normal}"
@@ -769,11 +767,11 @@ fi
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nPas de  configuration  auto  des  adresses à partir  des "router advertisements"(all)"
-a=1
+a=0
 val=$(sysctl net.ipv6.conf.all.autoconf| tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le support est activé activé${normal}"
+        echo -e "${red}Le support est activé ${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.autoconf=1"
 else
         echo -e "${green}Le support estdésactivé${normal}"
@@ -781,18 +779,18 @@ fi
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "Pas de configuration auto des adresses à partir des "router advertisements"(default)"
-a=1
+a=0
 val=$(sysctl net.ipv6.conf.default.autoconf | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le support est activé activé${normal}"
+        echo -e "${red}Le support est activé ${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.autoconf=1"
 else
         echo -e "${green}Le support estdésactivé${normal}"
 fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas accepter les ICMP de type redirect (all)"
-a=1
+a=0
 val=$(sysctl net.ipv6.conf.all.accept_redirects | tail -c2)
 if [ $val = $a ]
  then
@@ -804,7 +802,7 @@ fi
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "Ne pas  accepter  les  ICMP de type  redirect (default)"
-a=1
+a=0
 val=$(sysctl net.ipv6.conf.default.accept_redirects | tail -c2)
 if [ $val = $a ]
  then
@@ -828,7 +826,7 @@ else
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo -e "Refuser  les  packets  de  source  routing(default)"
+echo "Refuser  les  packets  de  source  routing(default)"
 a=1
 val=$(sysctl net.ipv6.conf.default.accept_source_route | tail -c2)
 if [ $val = $a ]
@@ -840,7 +838,7 @@ else
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo -e "Nombre  maximal d’adresses  autoconfigurées par  interface (all)"
+echo "Nombre  maximal d’adresses  autoconfigurées par  interface (all)"
 a=1
 val=$(sysctl net.ipv6.conf.all.max_addresses | tail -c2)
 if [ $val = $a ]
@@ -851,7 +849,7 @@ else
         echo -e "${green}Les packets de source routing sont refusés${normal}"
 fi
 echo "----------------------------------------------------------------------------------------"
-echo -e "Nombre  maximal d’adresses  autoconfigurées par  interface (default)"
+echo "Nombre  maximal d’adresses  autoconfigurées par  interface (default)"
 a=1
 val=$(sysctl net.ipv6.conf.default.max_addresses | tail -c2)
 if [ $val = $a ]
@@ -869,26 +867,26 @@ val=$(sysctl kernel.sysrq | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Les requètes systèmes sont activées${normal}"
-	echo -e "Pour mise en place : sysctl -w kernel.modules_disabled=1"
+	echo -e "Pour mise en place : sysctl -w kernel.sysrq=1"
 else
         echo -e "${green}Les requètes systèmes sont activées${normal}"
 fi
 
 
 echo "----------------------------------------------------------------------------------------"
-echo -e "Pas de core  dump  des exécutables  setuid"
+echo "Pas de core  dump  des exécutables  setuid"
 a=1
 val=$(sysctl fs.suid_dumpable | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Les core dump sont possibles${normal}"
-	echo -e "Pour mise en place : sysctl -w kernel.modules_disabled=1"
+	echo -e "Pour mise en place : sysctl -w fs.suid_dumpable=1"
 else
         echo -e "${green}Les core dump sont désactivés${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo -e "Interdiction de déréférencer des liens (link) vers des fichiers dont l’utilisateur courant n’est pas le propriétaire"
+echo "Interdiction de déréférencer des liens (link) vers des fichiers dont l’utilisateur courant n’est pas le propriétaire"
 a=0
 val=$(sysctl fs.protected_symlinks| tail -c2)
 if [ $val = $a ]
@@ -917,16 +915,16 @@ a=2
 val=$(sysctl kernel.randomize_va_space| tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}L'ASLR n'est pas activée${normal}"
-	echo -e "Pour mise en place : sysctl -w kernel.randomize_va_space=2"
-else
         echo -e "${green}L'ASLR est activée${normal}"
+ else
+	echo -e "${red}L'ASLR n'est pas activée${normal}"
+	echo -e "Pour mise en place : sysctl -w kernel.randomize_va_space=2"
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo "\nInterdiction  de  mapper  de la mémoire  dans  les  adresses  basses  "
+echo -e "\nInterdiction  de  mapper  de la mémoire  dans  les  adresses  basses  "
 a=$(sysctl vm.mmap_min_addr |cut -d" " -f 3)
-b=65535
+b=65536
 if [ "$a" -ne "$b" ]
 then
         echo -e "${red}Il est possible de mapper la mémoire dans les adresses basses${normal}"
@@ -936,13 +934,13 @@ else
 fi
 # Espace  de choix  plus  grand  pour  les  valeurs  de PID
 echo "----------------------------------------------------------------------------------------"
-echo "\nEspace  de choix  plus  grand  pour  les  valeurs  de PID"
+echo -e "\nEspace  de choix  plus  grand  pour  les  valeurs  de PID"
 a=$(sysctl kernel.pid_max |cut -d" " -f 3)
 b=65536
 if [ "$a" -ne "$b" ]
 then
         echo -e "${red}Il'espace de choix pour les valeurs de PID doit être augementé${normal}"
-	echo -e "Pour mise en place : sysctl -w kernel.pid_max = 65536"
+	echo -e "Pour mise en place : sysctl -w kernel.pid_max=65536"
 else
         echo -e "${green}L'espace de chois PID est conforme${normal}"
 fi
@@ -955,7 +953,7 @@ if [ $val = $a ]
         echo -e "${green}Obfuscation  des  adresses mémoire  kernel activé${normal}"
 else
         echo -e "${red}Obfuscation  des  adresses mémoire  kernel désactivé${normal}"
-	echo -e "Pour mise en place : sysctl -w kernel.modules_disabled=1"
+	echo -e "Pour mise en place : sysctl -w kernel.kptr_restrict=1"
 fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nRestriction d’accès au  buffer  dmesg"
@@ -966,7 +964,7 @@ if [ $val = $a ]
         echo -e "${green}Accès au buffer dmesg restreint${normal}"
 else
         echo -e "${red}L'accès au buffer dmesg n'est pas restreint${normal}"
-	echo -e "Pour mise en place : sysctl -w kernel.modules_disabled=1"
+	echo -e "Pour mise en place : sysctl -w kernel.dmesg_restrict=1"
 fi
 
 
@@ -1055,7 +1053,7 @@ else
 fi
 echo "#R63 Arguments explicites dans les spécifications sudo"
 	#pas de * caractère jocker dans le sudoers
-        nb=$(grep -c "/*" /etc/sudoers)
+        nb=$(grep -c "\*" /etc/sudoers)
         if [ $nb -eq 0 ]
         then
         echo "${green}Pas de /* dans votre fichier sudoers${normal}"
