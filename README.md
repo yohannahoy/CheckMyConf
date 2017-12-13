@@ -9,4 +9,6 @@ L'objectif de ce code est de tester la configuration de serveur Linux de type De
 
 Le code est perfectible, c'est certain.
 Vous pouvez proposer des modifications.
- 
+
+
+wget https://raw.githubusercontent.com/yohannahoy/CheckMyConf/master/CheckMyConf.sh
