@@ -474,7 +474,7 @@ fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nFiltrage  par  chemin  inverse"
 echo -e "Préconisation : Pas de routage des flux étrangés (all)"
-a=1
+a=0
 val=$(sysctl net.ipv4.conf.all.rp_filter | tail -c2)
 if [ $val = $a ]
  then
@@ -487,7 +487,7 @@ fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nFiltrage  par  chemin  inverse"
 echo "Préconisation : Pas de  routage  de flux étrangés (default)"
-a=1
+a=0
 val=$(sysctl net.ipv4.conf.default.rp_filter | tail -c2)
 if [ $val = $a ]
  then
@@ -500,12 +500,12 @@ fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas  envoyer  de  redirections  ICMP"
 echo -e "Préconisation : Pas de  redirection ICMP (all)"
-a=0
+a=1
 val=$(sysctl net.ipv4.conf.all.send_redirects | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}La redirection ICMP est activée${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.all.send_redirects=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.all.send_redirects=0"
 else
         echo -e "${green}La redirection ICMP est déactivée${normal}"
 fi
@@ -513,12 +513,12 @@ fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas  envoyer  de  redirections  ICMP"
 echo -e "Préconisation : Pas de  redirection ICMP (default)"
-a=0
+a=1
 val=$(sysctl net.ipv4.conf.default.send_redirects | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}La redirection ICMP est activée${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.default.send_redirects=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.default.send_redirects=0"
 else
         echo -e "${green}La redirection ICMP est déactivée${normal}"
 fi
@@ -526,12 +526,12 @@ fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nRefuser  les  paquets  de  source  routing"
 echo -e "Préconisation : Refuser  les  paquets  de  source  routing (all)"
-a=0
+a=1
 val=$(sysctl net.ipv4.conf.all.accept_source_route | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Le source  routing est activé${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.all.accept_source_route=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.all.accept_source_route=0"
 else
         echo -e "${green}Le source  routing est déactivé${normal}"
 fi
@@ -539,66 +539,66 @@ fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nRefuser  les  paquets  de  source  routing"
 echo -e "Préconisation : Refuser  les  paquets  de  source  routing (default)"
-a=0
+a=1
 val=$(sysctl net.ipv4.conf.default.accept_source_route | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Le source  routing est activé${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.default.accept_source_route=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.default.accept_source_route=0"
 else
         echo -e "${green}Le source  routing est déactivé${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo -e "\nNe pas  accepter  les  ICMP de type  redirect"
+echo -e "\nNe pas  accepter  les  ICMP de type  accept redirect"
 echo -e "Préconisation : Refuser  les  ICMP de type redirect (all)"
-a=0
+a=1
 val=$(sysctl net.ipv4.conf.all.accept_redirects | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Le serveur accepte les flux de type ICMP redirect${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.all.accept_redirects=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.all.accept_redirects=0"
 else
         echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo -e "\nRefuser  les  paquets  de  source  routing"
-echo -e "Préconisation : Refuser  les  paquets  de  source  routing (all)"
-a=0
+echo -e "\nNe pas  accepter  les  ICMP de type  secure redirect"
+echo -e "Préconisation : Refuser  les  ICMP de type redirect (all)"
+a=1
 val=$(sysctl net.ipv4.conf.all.secure_redirects | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}les  paquets  de  source  routing est activé${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.all.secure_redirects=1"
+        echo -e "${red}Le serveur accepte les flux de type ICMP redirect${normal}"
+	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.all.secure_redirects=0"
 else
-        echo -e "${green}les  paquets  de  source  routing est désactivé${normal}"
+        echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo -e "\nRefuser  les  paquets  de  source  routing"
-echo -e "Préconisation : Refuser  les  paquets  de  source  routing (default)"
+echo -e "\nNe pas  accepter  les  ICMP de type  accept redirect"
+echo -e "Préconisation : Refuser  les  ICMP de type redirect (default)"
 a=0
 val=$(sysctl net.ipv4.conf.default.accept_redirects | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}les  paquets  de  source  routing est activé${normal}"
+        echo -e "${red}Le serveur accepte les flux de type ICMP redirect${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.default.accept_redirects=1"
 else
-        echo -e "${green}les  paquets  de  source  routing est désactivé${normal}"
+        echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo -e "\nRefuser  les  paquets  de  source  routing"
-echo -e "Préconisation : Refuser  les  paquets  de  source  routing (secure)"
+echo -e "\nNe pas  accepter  les  ICMP de type  accept redirect"
+echo -e "Préconisation : Refuser  les  ICMP de type redirect (default)"
 a=0
 val=$(sysctl net.ipv4.conf.default.secure_redirects | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}les  paquets  de  source  routing est activé${normal}"
+        echo -e "${red}Le serveur accepte les flux de type ICMP redirect${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.default.secure_redirects=1"
 else
-        echo -e "${green}les  paquets  de  source  routing est désactivé${normal}"
+        echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
@@ -673,143 +673,143 @@ fi
 
 echo "----------------------------------------------------------------------------------------"
 echo "-e \nDésactiver  le  support  des "router  solicitations" (all)"
-a=0
+a=1
 val=$(sysctl net.ipv6.conf.all.router_solicitations  | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Le support est activé${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.router_solicitations=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.router_solicitations=0"
 else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nDésactiver  le  support  des "router  solicitations" (default)"
-a=0
+a=1
 val=$(sysctl net.ipv6.conf.default.router_solicitations | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Le support est activé${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.router_solicitations=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.router_solicitations=0"
 else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas  accepter  les "routers  preferences" par "router  advertisements"(all)"
-a=0
+a=1
 val=$(sysctl net.ipv6.conf.all.accept_ra_rtr_pref | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Le support est activé ${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_ra_rtr_pref=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_ra_rtr_pref=0"
 else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas  accepter  les "router  preferences" par "router  advertisements"(default)"
-a=0
+a=1
 val=$(sysctl net.ipv6.conf.default.accept_ra_rtr_pref | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Le support est activé ${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_ra_rtr_pref=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_ra_rtr_pref=0"
 else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nPas de  configuration  auto  des  prefix  par "router  advertisements"(all)"
-a=0
+a=1
 val=$(sysctl net.ipv6.conf.all.accept_ra_pinfo | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Le support est activé ${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_ra_pinfo=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_ra_pinfo=0"
 else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
 echo "Pas de  configuration  auto  des  prefix  par "router  advertisements"(default)"
-a=0
+a=1
 val=$(sysctl net.ipv6.conf.default.accept_ra_pinfo | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Le support est activé ${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_ra_pinfo=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_ra_pinfo=0"
 else
-        echo -e "${green}Le support estdésactivé${normal}"
+        echo -e "${green}Le support est désactivé${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nPas d’apprentissage  du  routeur  par défaut  par "router  advertisements"(all)"
-a=0
+a=1
 val=$(sysctl net.ipv6.conf.all.accept_ra_defrtr | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Le support est activé ${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_ra_defrtr=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_ra_defrtr=0"
 else
-        echo -e "${green}Le support estdésactivé${normal}"
+        echo -e "${green}Le support est désactivé${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "Pas d’apprentissage  du  routeur  par défaut  par "router  advertisements"(default)"
-a=0
+a=1
 val=$(sysctl net.ipv6.conf.default.accept_ra_defrtr | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Le support est activé ${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_ra_defrtr=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_ra_defrtr=0"
 else
-        echo -e "${green}Le support estdésactivé${normal}"
+        echo -e "${green}Le support est désactivé${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nPas de  configuration  auto  des  adresses à partir  des "router advertisements"(all)"
-a=0
+a=1
 val=$(sysctl net.ipv6.conf.all.autoconf| tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Le support est activé ${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.autoconf=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.autoconf=0"
 else
-        echo -e "${green}Le support estdésactivé${normal}"
+        echo -e "${green}Le support est désactivé${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "Pas de configuration auto des adresses à partir des "router advertisements"(default)"
-a=0
+a=1
 val=$(sysctl net.ipv6.conf.default.autoconf | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Le support est activé ${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.autoconf=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.autoconf=0"
 else
-        echo -e "${green}Le support estdésactivé${normal}"
+        echo -e "${green}Le support est désactivé${normal}"
 fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas accepter les ICMP de type redirect (all)"
-a=0
+a=1
 val=$(sysctl net.ipv6.conf.all.accept_redirects | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Les ICMP redirect sont acceptées${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_redirects=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_redirects=0"
 else
         echo -e "${green}Les ICMP redirect sont refusées${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "Ne pas  accepter  les  ICMP de type  redirect (default)"
-a=0
+a=1
 val=$(sysctl net.ipv6.conf.default.accept_redirects | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Les ICMP redirect sont acceptées${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_redirects=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_redirects=0"
 else
         echo -e "${green}Les ICMP redirect sont refusées${normal}"
 fi
@@ -822,7 +822,7 @@ val=$(sysctl net.ipv6.conf.all.accept_source_route | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Les packets de source routing sont acceptés${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_source_route=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_source_route=0"
 else
         echo -e "${green}Les packets de source routing sont refusés${normal}"
 fi
@@ -834,14 +834,14 @@ val=$(sysctl net.ipv6.conf.default.accept_source_route | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Les packets de source routing sont acceptés${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_source_route=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_source_route=0"
 else
         echo -e "${green}Les packets de source routing sont refusés${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
 echo "Nombre  maximal d’adresses  autoconfigurées par  interface (all)"
-a=1
+a=0
 val=$(sysctl net.ipv6.conf.all.max_addresses | tail -c2)
 if [ $val = $a ]
  then
@@ -852,7 +852,7 @@ else
 fi
 echo "----------------------------------------------------------------------------------------"
 echo "Nombre  maximal d’adresses  autoconfigurées par  interface (default)"
-a=1
+a=0
 val=$(sysctl net.ipv6.conf.default.max_addresses | tail -c2)
 if [ $val = $a ]
  then
