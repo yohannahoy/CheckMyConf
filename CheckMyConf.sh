@@ -986,8 +986,8 @@ fi
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nRestriction de l’utilisation du sous système perf : max sample rate"
-a=1
-val=$(system kernel.perf_event_max_sample_rate | tail -c2)
+a=2
+val=$(sysctl kernel.perf_event_max_sample_rate | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${green}Accès au sous systeme perf max sample rate ${normal}"
@@ -999,13 +999,13 @@ fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nRestriction de l’utilisation du sous système perf : cpu time max"
 a=1
-val=$(system kernel.perf_cpu_time_max_percent | tail -c2)
+val=$(sysctl kernel.perf_cpu_time_max_percent | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${green}Accès au sous systeme perf max sample rate ${normal}"
 else
         echo -e "${red}L'accès au sous systeme perf n'est pas restreint${normal}"
-	echo -e "Pour mise en place : sysctl -w kernel.perf_cpu_time_max_percent =1"
+	echo -e "Pour mise en place : sysctl -w kernel.perf_cpu_time_max_percent=1"
 fi
 
 
