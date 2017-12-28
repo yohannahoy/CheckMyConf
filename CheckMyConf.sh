@@ -109,12 +109,12 @@ netstat -teaoplon
 echo -e "\n"
 nb=$(netstat -ntaup | grep LISTEN | grep -c tcp6)
 echo -e "Vous avez ${red}$nb${normal} ports ouverts en tcp sur ipv6"
-nb=$(netstat -ntaup | grep LISTEN | grep -c udp6)
+nb=$(netstat -ntaup | grep -c udp6)
 echo -e "Vous avez ${red}$nb${normal} ports ouverts en udp sur ipv6"
 
 nb=$(netstat -ntaup | grep LISTEN | grep -c tcp)
 echo -e "Vous avez ${red}$nb${normal} ports ouverts en en tcp sur ipv4"
-nb=$(netstat -ntaup | grep LISTEN | grep -c udp)
+nb=$(netstat -ntaup | grep -c udp)
 echo -e "Vous avez ${red}$nb${normal} ports ouverts en en udp sur ipv4"
 
 echo -e "\n####################################################################################################################"
