@@ -654,7 +654,7 @@ then
 else
         echo -e "${green}La plage de ports éphèmères est conforme${normal}"
 fi
-echo -e "si besoin : sysctl -w net.ipv4.ip_local_port_range=\"1024 65535\""
+echo -e "si besoin : sysctl -w net.ipv4.ip_local_port_range=\"32768 65535\""
 
 
 echo "----------------------------------------------------------------------------------------"
