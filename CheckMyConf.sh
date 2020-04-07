@@ -9,8 +9,8 @@
 # Obj : Ajout de la couleur pour les résultats                                                                     #
 ####################################################################################################################
 
-normal=$(tput sgr0)                      # normal text
-#normal=$'\e[0m'                           # (works better sometimes)
+#normal=$(tput sgr0)                      # normal text
+normal=$'\e[0m'                           # (works better sometimes)
 bold=$(tput bold)                         # make colors bold/bright
 red="$bold$(tput setaf 1)"                # bright red text
 green=$(tput setaf 2)                     # dim green text
