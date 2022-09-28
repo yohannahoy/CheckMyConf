@@ -291,7 +291,7 @@ echo "##########################################################################
 echo "# Obj : vérification non-exhautive des recommandations de configuration                                            #"
 echo "####################################################################################################################"
 
-echo "Recommandations issues de la note technique NoDAT-NT-28/ANSSI/SDE/NP du 12 janvier 2016"
+echo "Recommandations issues du Guide ANSSI-BP-028 du 22 février 2019"
 
 echo "----------------------------------------------------------------------------------------------------------"
 #R1  Minimisation des services installés
@@ -395,6 +395,8 @@ if [ $nb -eq 0 ]
  else
         echo -e "\nR11 ${green}L’activation du service d’IOMMU permet de protéger la mémoire du système${normal}"
 fi
+
+#R12 Partitionnement type 
 echo -e "\n"
 echo "----------------------------------------------------------------------------------------"
 echo -e "R12 Partitionnement type${blue} Non évaluée${normal}"
@@ -438,17 +440,7 @@ echo -e "#----------------------------------------------------------------------
 #R13 Restrictions d’accès sur les fichiers System.map
 
 
-echo -e "\n#R13 Restrictions d’accès sur les fichiers System.map"
-a=$(find / -name System.map | wc -l)
-b=1
-if [ $a -ne 0 ]
-then
-        find / -name System.map -execdir ls -lisa {} \;
-else
-        echo "Votre système ne dispose pas de system.map"
-fi
-
-
+echo "#R13 Restrictions d’accès sur le dossier boot${blue} Non évaluées${normal}"
 echo "#R14 Installation de paquets réduite au strict nécessaire${blue} Non évaluée${normal}"
 echo "#R15 Choix des dépôts de paquets${blue} Non évaluée${normal}"
 echo "#R16 Dépôts de paquets durcis${blue} Non évaluée${normal}"
@@ -578,12 +570,12 @@ fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas  accepter  les  ICMP de type  accept redirect"
 echo -e "Préconisation : Refuser  les  ICMP de type redirect (default)"
-a=0
+a=1
 val=$(sysctl net.ipv4.conf.default.accept_redirects | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Le serveur accepte les flux de type ICMP redirect${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.default.accept_redirects=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.default.accept_redirects=0"
 else
         echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
@@ -591,12 +583,12 @@ fi
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas  accepter  les  ICMP de type  accept redirect"
 echo -e "Préconisation : Refuser  les  ICMP de type redirect (default)"
-a=0
+a=1
 val=$(sysctl net.ipv4.conf.default.secure_redirects | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${red}Le serveur accepte les flux de type ICMP redirect${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.default.secure_redirects=1"
+	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.default.secure_redirects=0"
 else
         echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
@@ -888,7 +880,7 @@ else
 fi
 
 echo "----------------------------------------------------------------------------------------"
-echo "Interdiction de déréférencer des liens (link) vers des fichiers dont l’utilisateur courant n’est pas le propriétaire"
+echo "Interdiction de déréférencer des liens (symlinks) vers des fichiers dont l’utilisateur courant n’est pas le propriétaire"
 a=0
 val=$(sysctl fs.protected_symlinks| tail -c2)
 if [ $val = $a ]
@@ -899,7 +891,7 @@ else
         echo -e "${green}Le déréférencement des liens symboliques est désactivé${normal}"
 fi
 echo "----------------------------------------------------------------------------------------"
-echo "Interdiction de déréférencer des liens (hard) vers des fichiers dont l’utilisateur courant n’est pas le  propriétaire"
+echo "Interdiction de déréférencer des liens (hardlinks) vers des fichiers dont l’utilisateur courant n’est pas le  propriétaire"
 a=0
 val=$(sysctl fs.protected_hardlinks| tail -c2)
 if [ $val = $a ]
@@ -986,14 +978,14 @@ fi
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "\nRestriction de l’utilisation du sous système perf : max sample rate"
-a=2
+a=1
 val=$(sysctl kernel.perf_event_max_sample_rate | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${green}Accès au sous systeme perf max sample rate ${normal}"
 else
         echo -e "${red}L'accès au sous systeme perf n'est pas restreint${normal}"
-	echo -e "Pour mise en place : sysctl -w kernel.perf_event_max_sample_rate=2"
+	echo -e "Pour mise en place : sysctl -w kernel.perf_event_max_sample_rate=1"
 fi
 
 echo "----------------------------------------------------------------------------------------"
@@ -1019,11 +1011,24 @@ if [ $val = $a ]
 else
         echo -e "${red}Le chargement des modules noyau est activé${normal}"
 	echo -e "Pour mise en place : sysctl -w kernel.modules_disabled=1"
+	echo -e "Il est conseillé de mettre directement à jour votre fichier /etc/sysctl.conf"
+	echo -e "en ajoutant la ligne suivante : kernel.modules_disabled = 1"
 fi
 
 
+echo -e "\nR25 Configuration sysctl du module Yama"
+a=0
+val=$(sysctl kernel.yama.ptrace_scope | tail -c2)
+if [ $val = $a ]
+ then
+	echo -e "${red}Il est recommandé de charger le module de sécurité Yama lors du démarrage${normal}"
+	echo -e "Vous pouvez par exemple passer l'argument security=yama au noyau"
+	echo -e "et configurer la sysctl kernel.yama.ptrace_scope à une valeur au moins égale à 1"
+else
+	echo -e "${green}Le module Yama est chargé${normal}"
+fi
 
-echo "#R25 Configuration sysctl du module Yama${blue} Non évaluée${normal}"
+
 echo "#R26 Désactivation des comptes utilisateurs inutilisés${blue} Non évaluée${normal}"
 echo "#R27 Désactivation des comptes de services${blue} Non évaluée${normal}"
 echo "#R28 Unicité et exclusivité des comptes de services système${blue} Non évaluée${normal}"
@@ -1031,6 +1036,8 @@ echo "#R29 Délai d’expiration de sessions utilisateurs${blue} Non évaluée${
 echo "#R30 Applications utilisant PAM${blue} Non évaluée${normal}"
 echo "#R31 Sécurisation des services réseau d’authentification PAM${blue} Non évaluée${normal}"
 echo "#R32 Protection des mots de passe stockés${blue} Non évaluée${normal}"
+#remarque : ANSSI recommande sha512 mais maintenant yescrypt est pris par défaut car meilleur.
+#ANSSI pas mis à jour - étonnant ?
 echo "#R33 Sécurisation des accès aux bases utilisateurs distantes${blue} Non évaluée${normal}"
 echo "#R34 Séparation des comptes système et d’administrateur de l’annuaire${blue} Non évaluée${normal}"
 echo "#R35 Valeur de umask${blue} Non évaluée${normal}"
@@ -1107,7 +1114,8 @@ echo "#R67 Paramétrage des booléens SELinux${blue} Non évaluée${normal}"
 # setsebool  -P allow_execstack=off
 # setsebool  -P secure_mode_insmod=off
 # setsebool  -P ssh_sysadm_login=off
- echo "#R68 Désinstallation des outils de débogage de politique SELinux${blue} Non évaluée${normal}"
+echo "#R68 Désinstallation des outils de débogage de politique SELinux${blue} Non évaluée${normal}"
+echo "#R69 Confinement des utilisateurs interactifs non privilégiés${blue} Non évaluées${normal}"
 
 }
 fonct_fail () {
