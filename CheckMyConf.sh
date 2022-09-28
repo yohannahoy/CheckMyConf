@@ -295,19 +295,19 @@ echo "Recommandations issues du Guide ANSSI-BP-028 du 22 février 2019"
 
 echo "----------------------------------------------------------------------------------------------------------"
 #R1  Minimisation des services installés
-echo -e "\nR1 Liste des services installés sur le serveur"
+echo -e "\n#R1 Liste des services installés sur le serveur"
 service --status-all 
 
 echo "----------------------------------------------------------------------------------------"
 #R2  Minimisation de la configuration
-echo -e "\nR2 Minimisation de la configuration : ${blue}Non évaluée${normal}"
+echo -e "\n#R2 Minimisation de la configuration : ${blue}Non évaluée${normal}"
 echo -e "Les fonctionnalités configurées au niveau des services démarrés doivent être limitées au
 strict nécessaire."
 
 
 echo "----------------------------------------------------------------------------------------"
 #R3  Principe de moindre privilège
-echo -e "\nR3 Principe de moindre privilège :${blue} Non évaluée${normal}"
+echo -e "\n#R3 Principe de moindre privilège :${blue} Non évaluée${normal}"
 echo -e "Les services et exécutables disponibles sur le système doivent faire l’objet d’une analyse
 afin de connaître les privilèges qui leurs sont associés, et doivent ensuite être configurés
 et intégrés en vue d’en utiliser le strict nécessaire."
@@ -315,7 +315,7 @@ et intégrés en vue d’en utiliser le strict nécessaire."
 echo "----------------------------------------------------------------------------------------"
 #R4  Utilisation des fonctionnalités de contrôle d’accès
 
-echo -e "\nR4 Utilisation des fonctionnalités de contrôle d'accès :${blue} Non évaluée${normal}"
+echo -e "\n#R4 Utilisation des fonctionnalités de contrôle d'accès :${blue} Non évaluée${normal}"
 echo -e "Utilisation des fonctionnalités de contrôle d’accès. Il est recommandé d’utiliser les 
 fonctionnalités de contrôle d’accès obligatoire (MAC) en plus du traditionnel modèle utilisateur
  Unix (DAC), voire éventuellement de les combiner avec des mécanismes de cloisonnement."
@@ -323,7 +323,7 @@ fonctionnalités de contrôle d’accès obligatoire (MAC) en plus du traditionn
 echo "----------------------------------------------------------------------------------------"
 #R5  Principe de défense en profondeur
 
-echo -e "\nR5 Principe de défense en profondeur :${blue} Non évaluée${normal}"
+echo -e "\n#R5 Principe de défense en profondeur :${blue} Non évaluée${normal}"
 echo -e "Sous Unix et dérivés, la défense en profondeur doit reposer sur une combinaison de
 barrières qu’il faut garder indépendantes les unes des autres. Par exemple :
 – authentification nécessaire avant d’effectuer des opérations, notamment quand elles
@@ -336,14 +336,14 @@ de séparation de privilèges ;
 
 echo "----------------------------------------------------------------------------------------"
 #R6  Cloisonnement des services réseau
-echo -e "\nR6  Cloisonnement des services réseau :${blue} Non évaluée${normal}"
+echo -e "\n#R6  Cloisonnement des services réseau :${blue} Non évaluée${normal}"
 echo -e "Les services réseau doivent autant que possible être hébergés sur des environnements
 distincts. Cela évite d’avoir d’autres services potentiellement affectés si l’un d’eux se
 retrouve compromis sous le même environnement."
 
 echo "----------------------------------------------------------------------------------------"
 #R7  Journalisation de l’activité des services
-echo -e "\nR7  Journalisation de l’activité des services${blue} Non évaluée${normal}"
+echo -e "\n#R7  Journalisation de l’activité des services${blue} Non évaluée${normal}"
 echo -e "Les activités du système et des services en cours d’exécution doivent être journalisées et
 archivées sur un système externe, non local."
 
@@ -352,7 +352,7 @@ echo "--------------------------------------------------------------------------
 nb=$(uname -a |grep -c "Debian")
 if [ $nb -eq 1 ]
 then 
-	echo -e "\nR8 Simmulation de mise à jour :"
+	echo -e "\n#R8 Simmulation de mise à jour :"
 	apt-get update && apt-get upgrade -s
 fi
 
@@ -369,7 +369,7 @@ fi
 
 echo "----------------------------------------------------------------------------------------"
 #R9  Configuration matérielle
-echo -e "\nR9 Configuration matérielle :${blue} Non évaluée${normal}"
+echo -e "\n#R9 Configuration matérielle :${blue} Non évaluée${normal}"
 echo -e "Il est conseillé d’appliquer les recommandations de configuration mentionnées dans
 la note technique « Recommandations de configuration matérielle de postes clients et
 serveurs x86_4»"
@@ -379,10 +379,10 @@ echo "--------------------------------------------------------------------------
 nb=$(arch | grep -c x86_64)
 if [ $nb -ne 1 ]
  then   
-        echo -e "\nR10 ${red}Vous devez privilégier une installation 64bits de votre système${normal}"
+        echo -e "\n#R10 ${red}Vous devez privilégier une installation 64bits de votre système${normal}"
 else 
 
-        echo -e "\nR10 ${green}Vous avez privilégié une installation 64bits de votre système${normal}"
+        echo -e "\n#R10 ${green}Vous avez privilégié une installation 64bits de votre système${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
@@ -390,16 +390,16 @@ echo "--------------------------------------------------------------------------
 nb=$(grep -c "iommu=force"  /etc/default/grub)
 if [ $nb -eq 0 ]
  then   
-        echo -e "\nR11 ${red}L’activation du service d’IOMMU permet de protéger la mémoire du système${normal}"
+        echo -e "\n#R11 ${red}L’activation du service d’IOMMU permet de protéger la mémoire du système${normal}"
 	echo -e "Ajoutez la variable iommu=force  dans /etc/default/grub"
  else
-        echo -e "\nR11 ${green}L’activation du service d’IOMMU permet de protéger la mémoire du système${normal}"
+        echo -e "\n#R11 ${green}L’activation du service d’IOMMU permet de protéger la mémoire du système${normal}"
 fi
 
 #R12 Partitionnement type 
 echo -e "\n"
 echo "----------------------------------------------------------------------------------------"
-echo -e "R12 Partitionnement type${blue} Non évaluée${normal}"
+echo -e "#R12 Partitionnement type${blue} Non évaluée${normal}"
 echo -e "#-----------------------------------------------------------------------------------------------------#"
 echo -e "# Point de montage |       Options              | Description                                         #"
 echo -e "#-----------------------------------------------------------------------------------------------------#"
@@ -437,12 +437,13 @@ echo -e "#----------------------------------------------------------------------
 echo -e "#    /var/tmp      |  nosuid,nodev,noexec       |Fichiers temporaires conservés après extinction      #"
 echo -e "#-----------------------------------------------------------------------------------------------------#"
 
-#R13 Restrictions d’accès sur les fichiers System.map
-
-
 echo "#R13 Restrictions d’accès sur le dossier boot${blue} Non évaluées${normal}"
 echo "#R14 Installation de paquets réduite au strict nécessaire${blue} Non évaluée${normal}"
-echo "#R15 Choix des dépôts de paquets${blue} Non évaluée${normal}"
+
+echo "#R15 Choix des dépôts de paquets"
+echo "Préconisation: Seul les dépôts connus et offciels doivent etre utilisés"
+cat /etc/apt/sources.list
+
 echo "#R16 Dépôts de paquets durcis${blue} Non évaluée${normal}"
 echo "#R17 Mot de passe du chargeur de démarrage${blue} Non évaluée${normal}"
 echo "#R18 Robustesse du mot de passe administrateur${blue} Non évaluée${normal}"
@@ -1002,7 +1003,7 @@ fi
 
 
 echo "----------------------------------------------------------------------------------------"
-echo -e "\nR24 Désactivation du chargement des modules noyau"
+echo -e "\n#R24 Désactivation du chargement des modules noyau"
 a=1
 val=$(sysctl kernel.modules_disabled | tail -c2)
 if [ $val = $a ]
@@ -1016,7 +1017,7 @@ else
 fi
 
 
-echo -e "\nR25 Configuration sysctl du module Yama"
+echo -e "\n#R25 Configuration sysctl du module Yama"
 a=0
 val=$(sysctl kernel.yama.ptrace_scope | tail -c2)
 if [ $val = $a ]
@@ -1065,7 +1066,7 @@ echo "#R56 Activation et utilisation de chroot par un service${blue} Non évalu�
 echo "#R57 Groupe dédié à l’usage de sudo${blue} Non évaluée${normal}"
 echo "#R58 Directives de configuration sudo${blue} Non évaluée${normal}"
 echo "----------------------------------------------------------------------------------------"
-echo -e "\nR58 Directives de configuration sudo"
+echo -e "\n#R58 Directives de configuration sudo"
         nb=$(grep -c "noexec" /etc/sudoers)
         if [ $nb -eq 1 ]
         then
@@ -1079,7 +1080,7 @@ fi
 echo "#R59 Authentification des utilisateurs exécutant sudo"
 echo "#R60 Privilèges des utilisateurs cible pour une commande sudo "
 echo "#R61 Limitation du nombre de commandes nécessitant l’option EXEC"
-echo "recommandation évaluée dans la R58"
+echo "Recommandations évaluées dans la #R58"
 echo "----------------------------------------------------------------------------------------"
 
 echo "#R62 Du bon usage de la négation dans une spécification sudo"
