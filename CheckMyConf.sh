@@ -300,10 +300,17 @@ service --status-all
 
 echo "----------------------------------------------------------------------------------------"
 #R2  Minimisation de la configuration
-echo -e "\n#R2 Minimisation de la configuration : ${blue}Non évaluée${normal}"
+echo -e "\n#R2 Minimisation de la configuration : ${blue}évaluée partiellement${normal}"
 echo -e "Les fonctionnalités configurées au niveau des services démarrés doivent être limitées au
 strict nécessaire."
-
+nb=$(ss -ltupn | grep -c exim)
+if [ $nb -ne 0 ]
+then 
+	echo "${red}Exim4 ne devrait pas être installé${normal}"
+        echo "Pour le désinstaller : apt-get --purge remove exim4 exim4-base exim4-config exim4-daemon-heavy"
+else
+        echo "${green}Exim4 n'est pas installé${normal}"
+fi
 
 echo "----------------------------------------------------------------------------------------"
 #R3  Principe de moindre privilège
@@ -437,7 +444,16 @@ echo -e "#----------------------------------------------------------------------
 echo -e "#    /var/tmp      |  nosuid,nodev,noexec       |Fichiers temporaires conservés après extinction      #"
 echo -e "#-----------------------------------------------------------------------------------------------------#"
 
-echo "#R13 Restrictions d’accès sur le dossier boot${blue} Non évaluées${normal}"
+echo "#R13 Restrictions d’accès sur le dossier boot"
+nb=$(mount | grep -v boot/ | grep -c boot)
+if [ $nb -ne 0 ]
+then 
+	echo "${red}La partition /boot ne devrait pas être accessible${normal}"
+else
+        echo "${green}le dossier boot n'est pas accessible${normal}"
+fi
+
+
 echo "#R14 Installation de paquets réduite au strict nécessaire${blue} Non évaluée${normal}"
 
 echo "#R15 Choix des dépôts de paquets"
@@ -1041,12 +1057,58 @@ echo "#R32 Protection des mots de passe stockés${blue} Non évaluée${normal}"
 #ANSSI pas mis à jour - étonnant ?
 echo "#R33 Sécurisation des accès aux bases utilisateurs distantes${blue} Non évaluée${normal}"
 echo "#R34 Séparation des comptes système et d’administrateur de l’annuaire${blue} Non évaluée${normal}"
-echo "#R35 Valeur de umask${blue} Non évaluée${normal}"
-echo "#R36 Droits d’accès aux fichiers de contenu sensible${blue} Non évaluée${normal}"
+
+echo "#R35 Valeur de umask"
+User_Umask_recommande=0077
+User_Umask=$(umask)
+if test $User_Umask_recommande != $User_Umask
+then
+      echo "${red}L'umask est $User_Umask.${normal}"
+      echo "Le umask système doit être positionné à 0027"
+      echo "(par défaut, tout ﬁchier créé n’est lisible que par l’utilisateur et son groupe, et modiﬁable uniquement par son propriétaire)."
+      echo "Le umask pour les utilisateurs doit être positionné à 0077"
+      echo "(tout ﬁchier créé par un utilisateur n’est lisible et modiﬁable que par lui)."
+else
+      echo  "${green}l'umask est 0077. C'est la valeur recommandée.${normal}"
+fi
+
+echo "#R36 Droits d’accès aux fichiers de contenu sensible"
+echo "Les ﬁchiers à contenu sensible ne doivent être lisibles que par les utilisateurs ayant le strict besoin d’en connaître."
+echo "Quand ces ﬁchiers contiennent des mots de passe (ou des empreintes de mots de passe) ils ne doivent être lisibles que par root."
+echo "En revanche, les ﬁchiers publics qui contiennent la liste des utilisateurs sont lisibles par tout le monde, mais sont éditables uniquement par root."
+echo "Fichiers qui ne devrait être en lecture uniquement pour root:"
+ls -l /etc/gshadow
+ls -l /etc/shadow
+
 echo "#R37 Exécutables avec bits setuid et setgid${blue} Non évaluée${normal}"
 echo "#R38 Exécutables setuid root${blue} Non évaluée${normal}"
 echo "#R39 Répertoires temporaires dédiés aux comptes${blue} Non évaluée${normal}"
-echo "#R40 Sticky bit et droits d’accès en écriture${blue} Non évaluée${normal}"
+
+echo "#R40 Sticky bit et droits d’accès en écriture"
+nb=$(find / -type d -perm -0002 -a \! -uid 0 -ls 2>/dev/null | grep "" -c)
+if [ $nb -ne 0 ]
+then 
+	echo "${red}Des répertoires sont accessibles en écriture par tous.${normal}"
+        echo "root devrait être le propriétaire de ces répertoires."
+        echo "Tous les répertoires accessibles en écriture par tous doivent avoir le sticky bit armé."
+        find / -type d -perm -0002 -a \! -uid 0 -ls 2>/dev/null
+else
+        echo "${green}Il n'y a pas de répertoire accessible en écriture par tous${normal}"
+fi
+
+nb=$(find / -type f -perm -0002 -ls 2>/dev/null | grep "" -c)
+if [ $nb -ne 0 ]
+then 
+	echo "${red}Aucun ﬁchier régulier ne nécessite d’être modiﬁable par tous.${normal}"
+        echo "Quand un ﬁchier doit être modiﬁable par plusieurs utilisateurs ou programmes en même temps,"
+        echo "un groupe doit être créé et seul ce groupe devra avoir des droits d’écriture sur ledit ﬁchier."
+        find / -type f -perm -0002 -ls 2>/dev/null
+#Le listing semble poser problème, on perd l'historique du terminal. Une solution possible ?
+#Ne serait-il pas mieux de rédiger un rapport dans un fichier plutôt que dans le terminal ? (ou plusieurs fichiers)
+else
+        echo "${green}Il n'y a pas de fichier accessible en écriture par tous${normal}"
+fi
+
 echo "#R41 Sécurisation des accès pour les sockets et pipes nommées${blue} Non évaluée${normal}"
 echo "#R42 Services et daemons résidents en mémoire${blue} Non évaluée${normal}"
 echo "#R43 Durcissement et configuration du service syslog${blue} Non évaluée${normal}"
