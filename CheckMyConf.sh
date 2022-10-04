@@ -285,6 +285,40 @@ echo -e "Désactivation de la redirection X11 : \t\t\t${red}ko${normal}";
 fi
 }
 
+####################################################################################################################
+#Obj : Outils pour création de rapports                                                                            #
+####################################################################################################################
+function Ecrire_Rapport()
+{
+  P_Contenu_Rapport=$1
+
+  Nom_Rapport="Rapport_"$(date '+%d-%m-%y')
+
+  echo $P_Contenu_Rapport >> $Nom_Rapport
+}
+
+function Ecrire_Entete()
+{
+  P_Nom_Entete=$1
+
+  Ecrire_Rapport "----------------------------------------------------------------------------"
+  Ecrire_Rapport " $P_Nom_Entete"
+  Ecrire_Rapport "----------------------------------------------------------------------------"
+  Ecrire_Rapport
+}
+
+function Ecrire_Separation()
+{
+  Ecrire_Rapport
+  Ecrire_Rapport "----------------------------------------------------------------------------"
+  Ecrire_Rapport "----------------------------------------------------------------------------"
+  Ecrire_Rapport
+}
+
+
+####################################################################################################################
+#Obj : Recommandations ANSSI                                                                                       #
+####################################################################################################################
 fonct_anssi () {
 clear
 echo "####################################################################################################################"
@@ -296,7 +330,10 @@ echo "Recommandations issues du Guide ANSSI-BP-028 du 22 février 2019"
 echo "----------------------------------------------------------------------------------------------------------"
 #R1  Minimisation des services installés
 echo -e "\n#R1 Liste des services installés sur le serveur"
-service --status-all 
+echo -e "La liste des services installés a été écrite dans le rapport."
+        Ecrire_Entete "#R1 - Liste des services installés sur le serveur"
+        service --status-all >> $Nom_Rapport
+        Ecrire_Separation
 
 echo "----------------------------------------------------------------------------------------"
 #R2  Minimisation de la configuration
@@ -372,7 +409,6 @@ then
 		yum check-update
 	fi
 fi
-
 
 echo "----------------------------------------------------------------------------------------"
 #R9  Configuration matérielle
@@ -1085,13 +1121,18 @@ echo "#R38 Exécutables setuid root${blue} Non évaluée${normal}"
 echo "#R39 Répertoires temporaires dédiés aux comptes${blue} Non évaluée${normal}"
 
 echo "#R40 Sticky bit et droits d’accès en écriture"
+Nom_Rapport="Rapport_"$(date '+%d-%m-%y')
 nb=$(find / -type d -perm -0002 -a \! -uid 0 -ls 2>/dev/null | grep "" -c)
 if [ $nb -ne 0 ]
 then 
 	echo "${red}Des répertoires sont accessibles en écriture par tous.${normal}"
+        echo "La liste des $nb répertoires concernés a été écrite dans le rapport."
         echo "root devrait être le propriétaire de ces répertoires."
         echo "Tous les répertoires accessibles en écriture par tous doivent avoir le sticky bit armé."
-        find / -type d -perm -0002 -a \! -uid 0 -ls 2>/dev/null
+
+        Ecrire_Entete "#R40 - Liste répertoires accessibles en écriture par tous"
+        find / -type d -perm -0002 -a \! -uid 0 -ls 2>/dev/null  >> $Nom_Rapport
+        Ecrire_Separation
 else
         echo "${green}Il n'y a pas de répertoire accessible en écriture par tous${normal}"
 fi
@@ -1100,11 +1141,14 @@ nb=$(find / -type f -perm -0002 -ls 2>/dev/null | grep "" -c)
 if [ $nb -ne 0 ]
 then 
 	echo "${red}Aucun ﬁchier régulier ne nécessite d’être modiﬁable par tous.${normal}"
+        echo "La liste des $nb fichiers concernés a a été écrite dans le rapport."
         echo "Quand un ﬁchier doit être modiﬁable par plusieurs utilisateurs ou programmes en même temps,"
         echo "un groupe doit être créé et seul ce groupe devra avoir des droits d’écriture sur ledit ﬁchier."
-        find / -type f -perm -0002 -ls 2>/dev/null
-#Le listing semble poser problème, on perd l'historique du terminal. Une solution possible ?
-#Ne serait-il pas mieux de rédiger un rapport dans un fichier plutôt que dans le terminal ? (ou plusieurs fichiers)
+
+        Ecrire_Entete "#R40 - Liste fichiers modifiables par tous"
+        find / -type f -perm -0002 -ls 2>/dev/null >> $Nom_Rapport
+        Ecrire_Separation
+
 else
         echo "${green}Il n'y a pas de fichier accessible en écriture par tous${normal}"
 fi
