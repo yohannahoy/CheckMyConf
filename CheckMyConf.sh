@@ -314,8 +314,19 @@ function Ecrire_Separation()
 {
   Ecrire_Rapport
   Ecrire_Rapport "----------------------------------------------------------------------------"
+  Ecrire_Rapport "-------"
   Ecrire_Rapport "----------------------------------------------------------------------------"
   Ecrire_Rapport
+}
+
+function Ecrire_ligneTableauR12()
+{
+  Ecrire_Rapport "#--------------------------------------------------------------------------------------------------------------------------------#"
+}
+
+function Ecrire_ligneTableauR38()
+{
+  Ecrire_Rapport "#----------------------------------------------------------------------------------------------------------------------------------------------------------------#"
 }
 
 
@@ -458,42 +469,43 @@ echo "--------------------------------------------------------------------------
 echo -e "\n${purple}#R12 Partitionnement type${blue} Non évaluée${normal}"
 echo -e "Un partitionnement type a été écrit dans le rapport."
 Ecrire_Entete "#R12 - Partitionnement type"
-Ecrire_Rapport "#-----------------------------------------------------------------------------------------------------#"
-Ecrire_Rapport "# Point de montage |       Options              | Description                                         #"
-Ecrire_Rapport "#-----------------------------------------------------------------------------------------------------#"
-Ecrire_Rapport "#      /           |     <sans option>          |Partition racine, contient le reste del’arborescence #"
-Ecrire_Rapport "#-----------------------------------------------------------------------------------------------------#"
-Ecrire_Rapport "#       /boot      | nosuid,nodev,noexec        | Contient le noyau et le chargeur dedémarrage.       #"
-Ecrire_Rapport "#                  |       (noauto optionnel)   |  nécessaire une fois le boot terminé                #"
-Ecrire_Rapport "#                  |                            |          (sauf mise à jour)                         #"
-Ecrire_Rapport "#-----------------------------------------------------------------------------------------------------#"
-Ecrire_Rapport "#       /opt       | nosuid,nodev(ro optionnel) | Packages  additionnels  au  système.                #"
-Ecrire_Rapport "#                  |                            | Montage en lecture seule si non utilisé             #"
-Ecrire_Rapport "#-----------------------------------------------------------------------------------------------------#"
-Ecrire_Rapport "#     /tmp         |                            |   Fichiers temporaires. Ne doit contenir            #"
-Ecrire_Rapport "#                  |    nosuid,nodev,noexec     | que des éléments non exécutables.                   #"
-Ecrire_Rapport "#                  |                            | Nettoyé après redémarrage                           #"
-Ecrire_Rapport "#-----------------------------------------------------------------------------------------------------#"
-Ecrire_Rapport "#     /srv         |nosuid,nodev                | Contient des fichiers servis par un                 #"
-Ecrire_Rapport "#                  |(noexec,ro optionnels)      |  service type web, ftp, etc.                        #"
-Ecrire_Rapport "#-----------------------------------------------------------------------------------------------------#"
-Ecrire_Rapport "#      /home       |      nosuid,nodev,noexec   |Contient  les HOME utilisateurs.                     #"
-Ecrire_Rapport "#                  |                            |Montage  en  lecture  seule  si  non utilisé         #"
-Ecrire_Rapport "#-----------------------------------------------------------------------------------------------------#"
-Ecrire_Rapport "#     /proc        |       hidepid=1            |Contient des informations sur les processus          #"
-Ecrire_Rapport "#                  |                            |et le système                                        #"
-Ecrire_Rapport "#-----------------------------------------------------------------------------------------------------#"
-Ecrire_Rapport "#      /usr        |      nodev                 |Contient la majorité des utilitaires et              #"
-Ecrire_Rapport "#                  |                            |fichiers système                                     #"
-Ecrire_Rapport "#-----------------------------------------------------------------------------------------------------#"
-Ecrire_Rapport "#       /var       | nosuid,nodev,noexec        |Partition contenant des fichiers variables           #"
-Ecrire_Rapport "#                  |                            |pendant  la  vie  du  système                        #"
-Ecrire_Rapport "#                  |                            |(mails, fichiers PID, bases de données d’un service) #"
-Ecrire_Rapport "#-----------------------------------------------------------------------------------------------------#"
-Ecrire_Rapport "#    /var/log      |  nosuid,nodev,noexec       |Contient les logs du système                         #"
-Ecrire_Rapport "#-----------------------------------------------------------------------------------------------------#"
-Ecrire_Rapport "#    /var/tmp      |  nosuid,nodev,noexec       |Fichiers temporaires conservés après extinction      #"
-Ecrire_Rapport "#-----------------------------------------------------------------------------------------------------#"
+Ecrire_Rapport ""
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \tPoint de montage\t | \tOptions\t\t\t | \tDescription\t\t\t\t\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \t/\t\t\t | <sans option>\t\t | Partition racine, contient le reste de l’arborescence\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \t/boot\t\t\t | nosuid,nodev,noexec\t\t | Contient le noyau et le chargeur de démarrage.\t\t #"
+Ecrire_Rapport "# \t\t\t\t | (noauto optionnel)\t\t | nécessaire une fois le boot terminé\t\t\t\t #"
+Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | (sauf mise à jour)\t\t\t\t\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \t/opt\t\t\t | nosuid,nodev(ro optionnel)\t | Packages  additionnels  au  système.\t\t\t\t  #"
+Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | Montage en lecture seule si non utilisé\t\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \t/tmp\t\t\t | nosuid,nodev,noexec\t\t | Fichiers temporaires. Ne doit contenir\t\t\t #"
+Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | que des éléments non exécutables.\t\t\t\t #"
+Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | Nettoyé après redémarrage\t\t\t\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \t/srv\t\t\t | nosuid,nodev\t\t\t | Contient des fichiers servis par un\t\t\t\t #"
+Ecrire_Rapport "# \t\t\t\t | (noexec,ro optionnels)\t | service type web, ftp, etc.\t\t\t\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "#  \t/home\t\t\t | nosuid,nodev,noexec\t\t | Contient  les HOME utilisateurs.\t\t\t\t #"
+Ecrire_Rapport "#  \t\t\t\t | \t\t\t\t | Montage  en  lecture  seule  si  non utilisé\t\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "#  \t/proc\t\t\t | hidepid=1\t\t\t | Contient des informations sur les processus\t\t\t #"
+Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | et le système\t\t\t\t\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \t/usr\t\t\t | nodev\t\t\t | Contient la majorité des utilitaires et\t\t\t #"
+Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | fichiers système\t\t\t\t\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \t/var\t\t\t | nosuid,nodev,noexec\t\t | Partition contenant des fichiers variables\t\t\t #"
+Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | pendant  la  vie  du  système\t\t\t\t\t #"
+Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | (mails, fichiers PID, bases de données d’un service)\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \t/var/log\t\t | nosuid,nodev,noexec\t\t | Contient les logs du système\t\t\t\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \t/var/tmp\t\t | nosuid,nodev,noexec\t\t | Fichiers temporaires conservés après extinction\t\t #"
+Ecrire_ligneTableauR12
 Ecrire_Separation
 
 echo "----------------------------------------------------------------------------------------"
@@ -1126,9 +1138,108 @@ ls -l /etc/shadow >> $Nom_Rapport
 Ecrire_Separation
 
 echo "----------------------------------------------------------------------------------------"
-echo -e "\n${purple}#R37 Exécutables avec bits setuid et setgid${blue} Non évaluée${normal}"
-echo "----------------------------------------------------------------------------------------"
-echo -e "\n${purple}#R38 Exécutables setuid root${blue} Non évaluée${normal}"
+echo -e "\n${purple}#R37 Exécutables avec bits setuid et setgid${normal}"
+echo "Seuls les programmes spéciﬁquement conçus pour être utilisés avec les bits setuid (ou setgid) peuvent avoir ces bits de privilèges positionnés."
+echo -e "\n${purple}#R38 Exécutables setuid root${normal}"
+echo "Les exécutables setuid doivent être le moins nombreux possible."
+echo "Lorsqu’il est attendu que seuls les administrateurs de la machine les exécutent, il faut leur retirer"
+echo "le bit set-uid et leur préférer des commandes comme su ou sudo, qui peuvent être surveillées."
+echo "La liste des fichiers setuid/setgid présents sur le système a été écrite dans le rapport."
+Ecrire_Entete "#R37 Exécutables avec bits setuid et setgid / #R38 Exécutables setuid root"
+Ecrire_Rapport "Voici une liste non exhaustive de ﬁchiers setuid root pouvant être rencontrés."
+Ecrire_Rapport "Tout exécutable non mentionné dans cette liste devrait être examiné avec une attention particulière."
+Ecrire_Rapport ""
+Ecrire_ligneTableauR38
+Ecrire_Rapport "#  \t\tExécutable\t\t\t | \t\tCommentaire\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /bin/mount\t\t\t\t\t | À désactiver, sauf si absolument nécessaire pour les utilisateurs.\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /bin/netreport\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /bin/ping6\t\t\t\t\t | (IPv6) Idem ping.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /bin/ping\t\t\t\t\t | (IPv4) Retirer droit setuid, sauf si un programme le requiert pour du monitoring.\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /bin/su\t\t\t\t\t | Changement d’utilisateur. Ne pas désactiver.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /bin/umount\t\t\t\t\t | À désactiver, sauf si absolument nécessaire pour les utilisateurs.\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /sbin/mount.nfs4\t\t\t\t | À désactiver si NFSv4 est inutilisé.\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /sbin/mount.nfs\t\t\t\t | À désactiver si NFSv2/3 est inutilisé.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /sbin/umount.nfs4\t\t\t\t | À désactiver si NFSv4 est inutilisé.\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /sbin/umount.nfs\t\t\t\t | À désactiver si NFSv2/3 est inutilisé.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /sbin/unix_chkpwd\t\t\t\t | Permet de vériﬁer le mot de passe utilisateur pour des programmes non root. À désactiver si inutilisé.\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/at\t\t\t\t\t | À désactiver si atd n’est pas utilisé.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/chage\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/chfn\t\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/chsh\t\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/crontab\t\t\t\t | À désactiver si cron n’est pas requis.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/fusermount\t\t\t\t | À désactiver sauf si des utilisateurs doivent monter des partitions FUSE.\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/gpasswd\t\t\t\t | À désactiver si pas d’authentiﬁcation de groupe.\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/locate\t\t\t\t | À désactiver. Remplacer par mlocate et slocate.\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/mail\t\t\t\t\t | À désactiver. Utiliser un mailer local comme ssmtp.\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/newgrp\t\t\t\t | À désactiver si pas d’authentiﬁcation de groupe.\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/passwd\t\t\t\t | À désactiver, sauf si des utilisateurs non root doivent pouvoir changer leur mot de passe.\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/pkexec\t\t\t\t | À désactiver si PolicyKit n’est pas utilisé.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/procmail\t\t\t\t | À désactiver sauf si procmail est requis.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/rcp\t\t\t\t\t | Obsolète. À désactiver.\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/rlogin\t\t\t\t | Obsolète. À désactiver.\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/rsh\t\t\t\t\t | Obsolète. À désactiver.\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/screen\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/sudo\t\t\t\t\t | Changement d’utilisateur. Ne pas désactiver.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/sudoedit\t\t\t\t | Idem sudo.\t\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/wall\t\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/X\t\t\t\t\t | À désactiver sauf si le serveur X est requis.\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/lib/dbus-1.0/dbus-daemon-launch-helper\t | À désactiver quand D-BUS n’est pas utilisé.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/lib/openssh/ssh-keysign\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/lib/pt_chown\t\t\t\t | À désactiver (permet de changer le propriétaire des PTY avant l’existence de devfs).\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/libexec/utempter/utempter\t\t | À désactiver si le proﬁl utempter SELinux n’est pas utilisé.\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/sbin/exim4\t\t\t\t | À désactiver si Exim n’est pas utilisé.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/sbin/suexec\t\t\t\t | À désactiver si le suexec Apache n’est pas utilisé.\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/sbin/traceroute\t\t\t\t | (IPv4) Idem ping.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/sbin/traceroute6\t\t\t\t | (IPv6) Idem ping.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport ""
+Ecrire_Rapport "Liste des fichiers setuid/setgid présents sur le système"
+find / -type f -perm /6000 -ls 2>/dev/null >> $Nom_Rapport
+Ecrire_Separation
+echo "Retirer les droits setuid ou setgid se fait au travers de la commande chmod :"
+echo "chmod u-s <fichier > (Retire le bit setuid)"
+echo "chmod g-s <fichier >  (Retire le bit setgid)"
+
 echo "----------------------------------------------------------------------------------------"
 echo -e "\n${purple}#R39 Répertoires temporaires dédiés aux comptes${blue} Non évaluée${normal}"
 
