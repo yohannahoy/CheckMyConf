@@ -30,7 +30,8 @@ white="$bold$gray"                        # bright white text
 # Obj : On fixe le nom du rapport                                                                                  #
 ####################################################################################################################
 
-Nom_Rapport="Rapport_"$(date '+%d-%m-%y-%T')
+Nom_Fichier="Rapport_"$(date '+%d-%m-%y-%H%M')
+Nom_Rapport="Annexe_"$(date '+%d-%m-%y-%H%M')
 
 ####################################################################################################################
 # Obj : vérifier que le script est executé par root                                                                #
@@ -314,8 +315,6 @@ function Ecrire_Separation()
 {
   Ecrire_Rapport
   Ecrire_Rapport "----------------------------------------------------------------------------"
-  Ecrire_Rapport "-------"
-  Ecrire_Rapport "----------------------------------------------------------------------------"
   Ecrire_Rapport
 }
 
@@ -343,9 +342,6 @@ echo "Recommandations issues du Guide ANSSI-BP-028 du 22 février 2019"
 
 echo "----------------------------------------------------------------------------------------------------------"
 #R1 Minimisation des services installés
-
-purple
-
 echo -e "\n${purple}#R1 Liste des services installés sur le serveur${normal}"
 echo -e "La liste des services installés a été écrite dans le rapport."
         Ecrire_Entete "#R1 - Liste des services installés sur le serveur"
@@ -680,15 +676,15 @@ else
         echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
 
-echo -e "\nLoguer  les  paquets  ayant  des IPs  anormales"
-echo -e "Préconisation : Loguer  les  paquets  ayant  des IPs  anormales (default)"
+echo -e "\nLogger  les  paquets  ayant  des IPs  anormales"
+echo -e "Préconisation : Logger  les  paquets  ayant  des IPs  anormales (default)"
 a=1
 val=$(sysctl net.ipv4.conf.all.log_martians | tail -c2)
 if [ $val = $a ]
  then
         echo "${green}les paquets sont loggés${normal}"
 else
-        echo "${red}les paquets  ne sont pas loggé${normal}"
+        echo "${red}les paquets  ne sont pas loggés${normal}"
 	echo "Pour mise en place : sysctl -w net.ipv4.conf.all.log_martians=1"
 fi
 
@@ -1437,7 +1433,7 @@ do
       4) fonct_fw exit ;;
       5) fonct_disq exit ;;
       6) fonct_sshd exit ;;
-      7) fonct_anssi exit ;;
+      7) fonct_anssi > $Nom_Fichier exit ;;
       8) fonct_fail exit ;;
       9) fonct_rap exit ;;
       10) echo "Fin"
