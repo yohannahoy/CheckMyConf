@@ -26,6 +26,11 @@ gray=$(tput setaf 7)                      # dim white text
 darkgray="$bold"$(tput setaf 0)           # bold black = dark gray text
 white="$bold$gray"                        # bright white text
 
+####################################################################################################################
+# Obj : On fixe le nom du rapport                                                                                  #
+####################################################################################################################
+
+Nom_Rapport="Rapport_"$(date '+%d-%m-%y-%T')
 
 ####################################################################################################################
 # Obj : vérifier que le script est executé par root                                                                #
@@ -292,9 +297,7 @@ function Ecrire_Rapport()
 {
   P_Contenu_Rapport=$1
 
-  Nom_Rapport="Rapport_"$(date '+%d-%m-%y')
-
-  echo $P_Contenu_Rapport >> $Nom_Rapport
+  echo -e $P_Contenu_Rapport >> $Nom_Rapport
 }
 
 function Ecrire_Entete()
@@ -311,8 +314,19 @@ function Ecrire_Separation()
 {
   Ecrire_Rapport
   Ecrire_Rapport "----------------------------------------------------------------------------"
+  Ecrire_Rapport "-------"
   Ecrire_Rapport "----------------------------------------------------------------------------"
   Ecrire_Rapport
+}
+
+function Ecrire_ligneTableauR12()
+{
+  Ecrire_Rapport "#--------------------------------------------------------------------------------------------------------------------------------#"
+}
+
+function Ecrire_ligneTableauR38()
+{
+  Ecrire_Rapport "#----------------------------------------------------------------------------------------------------------------------------------------------------------------#"
 }
 
 
@@ -328,16 +342,19 @@ echo "##########################################################################
 echo "Recommandations issues du Guide ANSSI-BP-028 du 22 février 2019"
 
 echo "----------------------------------------------------------------------------------------------------------"
-#R1  Minimisation des services installés
-echo -e "\n#R1 Liste des services installés sur le serveur"
+#R1 Minimisation des services installés
+
+purple
+
+echo -e "\n${purple}#R1 Liste des services installés sur le serveur${normal}"
 echo -e "La liste des services installés a été écrite dans le rapport."
         Ecrire_Entete "#R1 - Liste des services installés sur le serveur"
         service --status-all >> $Nom_Rapport
         Ecrire_Separation
 
 echo "----------------------------------------------------------------------------------------"
-#R2  Minimisation de la configuration
-echo -e "\n#R2 Minimisation de la configuration : ${blue}évaluée partiellement${normal}"
+#R2 Minimisation de la configuration
+echo -e "\n${purple}#R2 Minimisation de la configuration : ${blue}évaluée partiellement${normal}"
 echo -e "Les fonctionnalités configurées au niveau des services démarrés doivent être limitées au
 strict nécessaire."
 nb=$(ss -ltupn | grep -c exim)
@@ -350,24 +367,24 @@ else
 fi
 
 echo "----------------------------------------------------------------------------------------"
-#R3  Principe de moindre privilège
-echo -e "\n#R3 Principe de moindre privilège :${blue} Non évaluée${normal}"
+#R3 Principe de moindre privilège
+echo -e "\n${purple}#R3 Principe de moindre privilège :${blue} Non évaluée${normal}"
 echo -e "Les services et exécutables disponibles sur le système doivent faire l’objet d’une analyse
 afin de connaître les privilèges qui leurs sont associés, et doivent ensuite être configurés
 et intégrés en vue d’en utiliser le strict nécessaire."
 
 echo "----------------------------------------------------------------------------------------"
-#R4  Utilisation des fonctionnalités de contrôle d’accès
+#R4 Utilisation des fonctionnalités de contrôle d’accès
 
-echo -e "\n#R4 Utilisation des fonctionnalités de contrôle d'accès :${blue} Non évaluée${normal}"
+echo -e "\n${purple}#R4 Utilisation des fonctionnalités de contrôle d'accès :${blue} Non évaluée${normal}"
 echo -e "Utilisation des fonctionnalités de contrôle d’accès. Il est recommandé d’utiliser les 
 fonctionnalités de contrôle d’accès obligatoire (MAC) en plus du traditionnel modèle utilisateur
  Unix (DAC), voire éventuellement de les combiner avec des mécanismes de cloisonnement."
 
 echo "----------------------------------------------------------------------------------------"
-#R5  Principe de défense en profondeur
+#R5 Principe de défense en profondeur
 
-echo -e "\n#R5 Principe de défense en profondeur :${blue} Non évaluée${normal}"
+echo -e "\n${purple}#R5 Principe de défense en profondeur :${blue} Non évaluée${normal}"
 echo -e "Sous Unix et dérivés, la défense en profondeur doit reposer sur une combinaison de
 barrières qu’il faut garder indépendantes les unes des autres. Par exemple :
 – authentification nécessaire avant d’effectuer des opérations, notamment quand elles
@@ -379,25 +396,28 @@ de séparation de privilèges ;
 
 
 echo "----------------------------------------------------------------------------------------"
-#R6  Cloisonnement des services réseau
-echo -e "\n#R6  Cloisonnement des services réseau :${blue} Non évaluée${normal}"
+#R6 Cloisonnement des services réseau
+echo -e "\n${purple}#R6 Cloisonnement des services réseau :${blue} Non évaluée${normal}"
 echo -e "Les services réseau doivent autant que possible être hébergés sur des environnements
 distincts. Cela évite d’avoir d’autres services potentiellement affectés si l’un d’eux se
 retrouve compromis sous le même environnement."
 
 echo "----------------------------------------------------------------------------------------"
-#R7  Journalisation de l’activité des services
-echo -e "\n#R7  Journalisation de l’activité des services${blue} Non évaluée${normal}"
+#R7 Journalisation de l’activité des services
+echo -e "\n${purple}#R7 Journalisation de l’activité des services${blue} Non évaluée${normal}"
 echo -e "Les activités du système et des services en cours d’exécution doivent être journalisées et
 archivées sur un système externe, non local."
 
 echo "----------------------------------------------------------------------------------------"
-#R8  Mises à jour régulières
+#R8 Mises à jour régulières
 nb=$(uname -a |grep -c "Debian")
+echo -e "\n${purple}#R8 Mises à jour régulières${normal}"
 if [ $nb -eq 1 ]
 then 
-	echo -e "\n#R8 Simmulation de mise à jour :"
-	apt-get update && apt-get upgrade -s
+        echo -e "Une simulation de mise à jour a été écrite dans le rapport."
+        Ecrire_Entete "#R8 - Simulation de mise à jour (apt-get)"
+        apt-get update && apt-get upgrade -s >> $Nom_Rapport
+        Ecrire_Separation
 fi
 
 if [ -f /etc/redhat-release ]
@@ -405,82 +425,92 @@ then
 	nb=$(grep -c "CentOS" /etc/redhat-release)
 	if [ $nb -eq 1 ]
 	then 
-		echo -e "\nR8 Simmulation de mise à jour :"
-		yum check-update
+                echo -e "Une simulation de mise à jour a été écrite dans le rapport."
+                Ecrire_Entete "#R8 - Simulation de mise à jour (yum)"
+                yum check-update >> $Nom_Rapport
+                Ecrire_Separation
+		
 	fi
 fi
 
 echo "----------------------------------------------------------------------------------------"
-#R9  Configuration matérielle
-echo -e "\n#R9 Configuration matérielle :${blue} Non évaluée${normal}"
+#R9 Configuration matérielle
+echo -e "\n${purple}#R9 Configuration matérielle :${blue} Non évaluée${normal}"
 echo -e "Il est conseillé d’appliquer les recommandations de configuration mentionnées dans
 la note technique « Recommandations de configuration matérielle de postes clients et
 serveurs x86_4»"
 
 echo "----------------------------------------------------------------------------------------"
 #R10 Architecture 32 et 64 bits
+echo -e "\n${purple}#R10 Architecture 32 et 64 bits${normal}"
 nb=$(arch | grep -c x86_64)
 if [ $nb -ne 1 ]
  then   
-        echo -e "\n#R10 ${red}Vous devez privilégier une installation 64bits de votre système${normal}"
+        echo -e "${red}Vous devez privilégier une installation 64bits de votre système${normal}"
 else 
 
-        echo -e "\n#R10 ${green}Vous avez privilégié une installation 64bits de votre système${normal}"
+        echo -e "${green}Vous avez privilégié une installation 64bits de votre système${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
 #R11 Directive de configuration de l’IOMMU
+echo -e "\n${purple}#R11 Directive de configuration de l’IOMMU${normal}"
 nb=$(grep -c "iommu=force"  /etc/default/grub)
 if [ $nb -eq 0 ]
  then   
-        echo -e "\n#R11 ${red}L’activation du service d’IOMMU permet de protéger la mémoire du système${normal}"
+        echo -e "${red}L’activation du service d’IOMMU permet de protéger la mémoire du système${normal}"
 	echo -e "Ajoutez la variable iommu=force  dans /etc/default/grub"
  else
-        echo -e "\n#R11 ${green}L’activation du service d’IOMMU permet de protéger la mémoire du système${normal}"
+        echo -e "${green}L’activation du service d’IOMMU permet de protéger la mémoire du système${normal}"
 fi
 
-#R12 Partitionnement type 
-echo -e "\n"
 echo "----------------------------------------------------------------------------------------"
-echo -e "#R12 Partitionnement type${blue} Non évaluée${normal}"
-echo -e "#-----------------------------------------------------------------------------------------------------#"
-echo -e "# Point de montage |       Options              | Description                                         #"
-echo -e "#-----------------------------------------------------------------------------------------------------#"
-echo -e "#      /           |     <sans option>          |Partition racine, contient le reste del’arborescence #"
-echo -e "#-----------------------------------------------------------------------------------------------------#"
-echo -e "#       /boot      | nosuid,nodev,noexec        | Contient le noyau et le chargeur dedémarrage.       #"
-echo -e "#                  |       (noauto optionnel)   |  nécessaire une fois le boot terminé                #"
-echo -e "#                  |                            |          (sauf mise à jour)                         #"
-echo -e "#-----------------------------------------------------------------------------------------------------#"
-echo -e "#       /opt       | nosuid,nodev(ro optionnel) | Packages  additionnels  au  système.                #"
-echo -e "#                  |                            | Montage en lecture seule si non utilisé             #"
-echo -e "#-----------------------------------------------------------------------------------------------------#"
-echo -e "#     /tmp         |                            |   Fichiers temporaires. Ne doit contenir            #"
-echo -e "#                  |    nosuid,nodev,noexec     | que des éléments non exécutables.                   #"
-echo -e "#                  |                            | Nettoyé après redémarrage                           #"
-echo -e "#-----------------------------------------------------------------------------------------------------#"
-echo -e "#     /srv         |nosuid,nodev                | Contient des fichiers servis par un                 #"
-echo -e "#                  |(noexec,ro optionnels)      |  service type web, ftp, etc.                        #"
-echo -e "#-----------------------------------------------------------------------------------------------------#"
-echo -e "#      /home       |      nosuid,nodev,noexec   |Contient  les HOME utilisateurs.                     #"
-echo -e "#                  |                            |Montage  en  lecture  seule  si  non utilisé         #"
-echo -e "#-----------------------------------------------------------------------------------------------------#"
-echo -e "#     /proc        |       hidepid=1            |Contient des informations sur les processus          #"
-echo -e "#                  |                            |et le système                                        #"
-echo -e "#-----------------------------------------------------------------------------------------------------#"
-echo -e "#      /usr        |      nodev                 |Contient la majorité des utilitaires et              #"
-echo -e "#                  |                            |fichiers système                                     #"
-echo -e "#-----------------------------------------------------------------------------------------------------#"
-echo -e "#       /var       | nosuid,nodev,noexec        |Partition contenant des fichiers variables           #"
-echo -e "#                  |                            |pendant  la  vie  du  système                        #"
-echo -e "#                  |                            |(mails, fichiers PID, bases de données d’un service) #"
-echo -e "#-----------------------------------------------------------------------------------------------------#"
-echo -e "#    /var/log      |  nosuid,nodev,noexec       |Contient les logs du système                         #"
-echo -e "#-----------------------------------------------------------------------------------------------------#"
-echo -e "#    /var/tmp      |  nosuid,nodev,noexec       |Fichiers temporaires conservés après extinction      #"
-echo -e "#-----------------------------------------------------------------------------------------------------#"
+#R12 Partitionnement type
+echo -e "\n${purple}#R12 Partitionnement type${blue} Non évaluée${normal}"
+echo -e "Un partitionnement type a été écrit dans le rapport."
+Ecrire_Entete "#R12 - Partitionnement type"
+Ecrire_Rapport ""
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \tPoint de montage\t | \tOptions\t\t\t | \tDescription\t\t\t\t\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \t/\t\t\t | <sans option>\t\t | Partition racine, contient le reste de l’arborescence\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \t/boot\t\t\t | nosuid,nodev,noexec\t\t | Contient le noyau et le chargeur de démarrage.\t\t #"
+Ecrire_Rapport "# \t\t\t\t | (noauto optionnel)\t\t | nécessaire une fois le boot terminé\t\t\t\t #"
+Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | (sauf mise à jour)\t\t\t\t\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \t/opt\t\t\t | nosuid,nodev(ro optionnel)\t | Packages  additionnels  au  système.\t\t\t\t  #"
+Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | Montage en lecture seule si non utilisé\t\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \t/tmp\t\t\t | nosuid,nodev,noexec\t\t | Fichiers temporaires. Ne doit contenir\t\t\t #"
+Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | que des éléments non exécutables.\t\t\t\t #"
+Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | Nettoyé après redémarrage\t\t\t\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \t/srv\t\t\t | nosuid,nodev\t\t\t | Contient des fichiers servis par un\t\t\t\t #"
+Ecrire_Rapport "# \t\t\t\t | (noexec,ro optionnels)\t | service type web, ftp, etc.\t\t\t\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "#  \t/home\t\t\t | nosuid,nodev,noexec\t\t | Contient  les HOME utilisateurs.\t\t\t\t #"
+Ecrire_Rapport "#  \t\t\t\t | \t\t\t\t | Montage  en  lecture  seule  si  non utilisé\t\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "#  \t/proc\t\t\t | hidepid=1\t\t\t | Contient des informations sur les processus\t\t\t #"
+Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | et le système\t\t\t\t\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \t/usr\t\t\t | nodev\t\t\t | Contient la majorité des utilitaires et\t\t\t #"
+Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | fichiers système\t\t\t\t\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \t/var\t\t\t | nosuid,nodev,noexec\t\t | Partition contenant des fichiers variables\t\t\t #"
+Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | pendant  la  vie  du  système\t\t\t\t\t #"
+Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | (mails, fichiers PID, bases de données d’un service)\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \t/var/log\t\t | nosuid,nodev,noexec\t\t | Contient les logs du système\t\t\t\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Rapport "# \t/var/tmp\t\t | nosuid,nodev,noexec\t\t | Fichiers temporaires conservés après extinction\t\t #"
+Ecrire_ligneTableauR12
+Ecrire_Separation
 
-echo "#R13 Restrictions d’accès sur le dossier boot"
+echo "----------------------------------------------------------------------------------------"
+#R13 Restrictions d’accès sur le dossier boot
+echo -e "\n${purple}#R13 Restrictions d’accès sur le dossier boot${normal}"
 nb=$(mount | grep -v boot/ | grep -c boot)
 if [ $nb -ne 0 ]
 then 
@@ -490,21 +520,35 @@ else
 fi
 
 
-echo "#R14 Installation de paquets réduite au strict nécessaire${blue} Non évaluée${normal}"
-
-echo "#R15 Choix des dépôts de paquets"
-echo "Préconisation: Seul les dépôts connus et offciels doivent etre utilisés"
-cat /etc/apt/sources.list
-
-echo "#R16 Dépôts de paquets durcis${blue} Non évaluée${normal}"
-echo "#R17 Mot de passe du chargeur de démarrage${blue} Non évaluée${normal}"
-echo "#R18 Robustesse du mot de passe administrateur${blue} Non évaluée${normal}"
-echo "#R19 Imputabilité des opérations d’administration${blue} Non évaluée${normal}"
-echo "#R20 Installation d’éléments secrets ou de confiance${blue} Non évaluée${normal}"
-echo "#R21 Durcissement et surveillance des services soumis à des flux arbitraires${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R14 Installation de paquets réduite au strict nécessaire${blue} Non évaluée${normal}"
 
 echo "----------------------------------------------------------------------------------------"
-echo -e "\n#R22 Paramétrage des sysctl réseau"
+#R15 Choix des dépôts de paquets
+echo -e "\n${purple}#R15 Choix des dépôts de paquets${normal}"
+echo "Préconisation: Seul les dépôts connus et offciels doivent etre utilisés"
+echo "Les dépôts utilisés ont été écrit dans le rapport."
+Ecrire_Entete "#R15 - Liste des dépôts utilisés"
+cat /etc/apt/sources.list >> $Nom_Rapport
+Ecrire_Separation
+
+
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R16 Dépôts de paquets durcis${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R17 Mot de passe du chargeur de démarrage${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R18 Robustesse du mot de passe administrateur${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R19 Imputabilité des opérations d’administration${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R20 Installation d’éléments secrets ou de confiance${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R21 Durcissement et surveillance des services soumis à des flux arbitraires${blue} Non évaluée${normal}"
+
+echo "----------------------------------------------------------------------------------------"
+#R22 Paramétrage des sysctl réseau
+echo -e "\n${purple}#R22 Paramétrage des sysctl réseau${normal}"
 echo -e "Préconisation : Pas de  routage  entre  les  interfaces"
 val=$(sysctl net.ipv4.ip_forward | tail -c2)
 a=1
@@ -516,7 +560,6 @@ else
         echo "${green}Le routage est désactivé entre vos interfaces${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nFiltrage  par  chemin  inverse"
 echo -e "Préconisation : Pas de routage des flux étrangés (all)"
 a=0
@@ -529,7 +572,6 @@ else
         echo "${green}Le routage des paquets étrangers est désactivé${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nFiltrage  par  chemin  inverse"
 echo "Préconisation : Pas de  routage  de flux étrangés (default)"
 a=0
@@ -542,7 +584,6 @@ else
         echo "${green}Le routage des paquets étrangers est désactivé${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas  envoyer  de  redirections  ICMP"
 echo -e "Préconisation : Pas de  redirection ICMP (all)"
 a=1
@@ -555,7 +596,6 @@ else
         echo -e "${green}La redirection ICMP est déactivée${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas  envoyer  de  redirections  ICMP"
 echo -e "Préconisation : Pas de  redirection ICMP (default)"
 a=1
@@ -568,7 +608,6 @@ else
         echo -e "${green}La redirection ICMP est déactivée${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nRefuser  les  paquets  de  source  routing"
 echo -e "Préconisation : Refuser  les  paquets  de  source  routing (all)"
 a=1
@@ -581,7 +620,6 @@ else
         echo -e "${green}Le source  routing est déactivé${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nRefuser  les  paquets  de  source  routing"
 echo -e "Préconisation : Refuser  les  paquets  de  source  routing (default)"
 a=1
@@ -594,7 +632,6 @@ else
         echo -e "${green}Le source  routing est déactivé${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas  accepter  les  ICMP de type  accept redirect"
 echo -e "Préconisation : Refuser  les  ICMP de type redirect (all)"
 a=1
@@ -607,7 +644,6 @@ else
         echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas  accepter  les  ICMP de type  secure redirect"
 echo -e "Préconisation : Refuser  les  ICMP de type redirect (all)"
 a=1
@@ -620,7 +656,6 @@ else
         echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas  accepter  les  ICMP de type  accept redirect"
 echo -e "Préconisation : Refuser  les  ICMP de type redirect (default)"
 a=1
@@ -633,7 +668,6 @@ else
         echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas  accepter  les  ICMP de type  accept redirect"
 echo -e "Préconisation : Refuser  les  ICMP de type redirect (default)"
 a=1
@@ -646,7 +680,6 @@ else
         echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nLoguer  les  paquets  ayant  des IPs  anormales"
 echo -e "Préconisation : Loguer  les  paquets  ayant  des IPs  anormales (default)"
 a=1
@@ -659,7 +692,6 @@ else
 	echo "Pour mise en place : sysctl -w net.ipv4.conf.all.log_martians=1"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 # RFC  1337
 echo -e "\nRFC 1337"
 echo -e "Préconisation : TIME-WAIT Assassination Hazards in TCP"
@@ -673,7 +705,6 @@ else
 	echo -e "Pour mise en place : sysctl -w net.ipv4.tcp_rfc1337=1"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 # Ignorer  les réponses  non  conformes à la RFC  1122
 echo -e "\nIgnorer  les réponses  non  conformes à la RFC 1122"
 echo -e "Préconisation : Ignorer  les réponses  non  conformes"
@@ -687,8 +718,6 @@ else
 	echo -e "Pour mise en place : sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1"
 fi
 
-
-echo "----------------------------------------------------------------------------------------"
 # Augmenter  la plage  pour  les  ports éphémères
 echo -e "\nAugmenter  la plage  pour  les  ports éphémères"
 a=$(sysctl net.ipv4.ip_local_port_range |cut -f 2)
@@ -701,10 +730,8 @@ else
 fi
 echo -e "si besoin : sysctl -w net.ipv4.ip_local_port_range=\"32768 65535\""
 
-
-echo "----------------------------------------------------------------------------------------"
 # Utiliser  les SYN cookies
-echo -e "\nUtiliser  les SYN  cookies"
+echo "Utiliser  les SYN  cookies"
 a=1
 val=$(sysctl net.ipv4.tcp_syncookies | tail -c2)
 if [ $val = $a ]
@@ -715,8 +742,6 @@ else
 	echo -e "Pour mise en place : sysctl -w net.ipv4.tcp_syncookies=1"
 fi
 
-
-echo "----------------------------------------------------------------------------------------"
 echo "-e \nDésactiver  le  support  des "router  solicitations" (all)"
 a=1
 val=$(sysctl net.ipv6.conf.all.router_solicitations  | tail -c2)
@@ -728,7 +753,6 @@ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nDésactiver  le  support  des "router  solicitations" (default)"
 a=1
 val=$(sysctl net.ipv6.conf.default.router_solicitations | tail -c2)
@@ -740,7 +764,6 @@ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas  accepter  les "routers  preferences" par "router  advertisements"(all)"
 a=1
 val=$(sysctl net.ipv6.conf.all.accept_ra_rtr_pref | tail -c2)
@@ -752,7 +775,6 @@ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nNe pas  accepter  les "router  preferences" par "router  advertisements"(default)"
 a=1
 val=$(sysctl net.ipv6.conf.default.accept_ra_rtr_pref | tail -c2)
@@ -764,7 +786,6 @@ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nPas de  configuration  auto  des  prefix  par "router  advertisements"(all)"
 a=1
 val=$(sysctl net.ipv6.conf.all.accept_ra_pinfo | tail -c2)
@@ -776,7 +797,6 @@ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo "Pas de  configuration  auto  des  prefix  par "router  advertisements"(default)"
 a=1
 val=$(sysctl net.ipv6.conf.default.accept_ra_pinfo | tail -c2)
@@ -788,7 +808,6 @@ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nPas d’apprentissage  du  routeur  par défaut  par "router  advertisements"(all)"
 a=1
 val=$(sysctl net.ipv6.conf.all.accept_ra_defrtr | tail -c2)
@@ -800,7 +819,6 @@ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "Pas d’apprentissage  du  routeur  par défaut  par "router  advertisements"(default)"
 a=1
 val=$(sysctl net.ipv6.conf.default.accept_ra_defrtr | tail -c2)
@@ -812,7 +830,6 @@ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nPas de  configuration  auto  des  adresses à partir  des "router advertisements"(all)"
 a=1
 val=$(sysctl net.ipv6.conf.all.autoconf| tail -c2)
@@ -824,7 +841,6 @@ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "Pas de configuration auto des adresses à partir des "router advertisements"(default)"
 a=1
 val=$(sysctl net.ipv6.conf.default.autoconf | tail -c2)
@@ -835,7 +851,7 @@ if [ $val = $a ]
 else
         echo -e "${green}Le support est désactivé${normal}"
 fi
-echo "----------------------------------------------------------------------------------------"
+
 echo -e "\nNe pas accepter les ICMP de type redirect (all)"
 a=1
 val=$(sysctl net.ipv6.conf.all.accept_redirects | tail -c2)
@@ -847,7 +863,6 @@ else
         echo -e "${green}Les ICMP redirect sont refusées${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "Ne pas  accepter  les  ICMP de type  redirect (default)"
 a=1
 val=$(sysctl net.ipv6.conf.default.accept_redirects | tail -c2)
@@ -859,8 +874,6 @@ else
         echo -e "${green}Les ICMP redirect sont refusées${normal}"
 fi
 
-
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nRefuser  les  packets  de  source  routing (all)"
 a=1
 val=$(sysctl net.ipv6.conf.all.accept_source_route | tail -c2)
@@ -872,7 +885,6 @@ else
         echo -e "${green}Les packets de source routing sont refusés${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo "Refuser  les  packets  de  source  routing(default)"
 a=1
 val=$(sysctl net.ipv6.conf.default.accept_source_route | tail -c2)
@@ -884,8 +896,7 @@ else
         echo -e "${green}Les packets de source routing sont refusés${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
-echo "Nombre  maximal d’adresses  autoconfigurées par  interface (all)"
+echo "\nNombre  maximal d’adresses  autoconfigurées par  interface (all)"
 a=0
 val=$(sysctl net.ipv6.conf.all.max_addresses | tail -c2)
 if [ $val = $a ]
@@ -895,7 +906,7 @@ if [ $val = $a ]
 else
         echo -e "${green}Les packets de source routing sont refusés${normal}"
 fi
-echo "----------------------------------------------------------------------------------------"
+
 echo "Nombre  maximal d’adresses  autoconfigurées par  interface (default)"
 a=0
 val=$(sysctl net.ipv6.conf.default.max_addresses | tail -c2)
@@ -907,7 +918,9 @@ else
         echo -e "${green}Les packets de source routing sont refusés${normal}"
 fi
 
-echo -e "\n#R23 Paramétrage des sysctl système"
+#R23 Paramétrage des sysctl système
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R23 Paramétrage des sysctl système${normal}"
 echo -e "Désactivation  des  SysReq"
 a=1
 val=$(sysctl kernel.sysrq | tail -c2)
@@ -920,8 +933,7 @@ else
 fi
 
 
-echo "----------------------------------------------------------------------------------------"
-echo "Pas de core  dump  des exécutables  setuid"
+echo -e "\nPas de core  dump  des exécutables  setuid"
 a=1
 val=$(sysctl fs.suid_dumpable | tail -c2)
 if [ $val = $a ]
@@ -932,8 +944,7 @@ else
         echo -e "${green}Les core dump sont désactivés${normal}"
 fi
 
-echo "----------------------------------------------------------------------------------------"
-echo "Interdiction de déréférencer des liens (symlinks) vers des fichiers dont l’utilisateur courant n’est pas le propriétaire"
+echo -e "\nInterdiction de déréférencer des liens (symlinks) vers des fichiers dont l’utilisateur courant n’est pas le propriétaire"
 a=0
 val=$(sysctl fs.protected_symlinks| tail -c2)
 if [ $val = $a ]
@@ -943,7 +954,7 @@ if [ $val = $a ]
 else
         echo -e "${green}Le déréférencement des liens symboliques est désactivé${normal}"
 fi
-echo "----------------------------------------------------------------------------------------"
+
 echo "Interdiction de déréférencer des liens (hardlinks) vers des fichiers dont l’utilisateur courant n’est pas le  propriétaire"
 a=0
 val=$(sysctl fs.protected_hardlinks| tail -c2)
@@ -955,9 +966,7 @@ else
         echo -e "${green}Le déréférencement des liens symboliques est désactivé${normal}"
 fi
 
-
-echo "----------------------------------------------------------------------------------------"
-echo "Activation de l'ASLR"
+echo -e "\nActivation de l'ASLR"
 a=2
 val=$(sysctl kernel.randomize_va_space| tail -c2)
 if [ $val = $a ]
@@ -968,7 +977,6 @@ if [ $val = $a ]
 	echo -e "Pour mise en place : sysctl -w kernel.randomize_va_space=2"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nInterdiction  de  mapper  de la mémoire  dans  les  adresses  basses  "
 a=$(sysctl vm.mmap_min_addr |cut -d" " -f 3)
 b=65536
@@ -979,8 +987,8 @@ then
 else
         echo -e "${green}La plage de mémoire adressable est conforme${normal}"
 fi
+
 # Espace  de choix  plus  grand  pour  les  valeurs  de PID
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nEspace  de choix  plus  grand  pour  les  valeurs  de PID"
 a=$(sysctl kernel.pid_max |cut -d" " -f 3)
 b=65536
@@ -991,7 +999,7 @@ then
 else
         echo -e "${green}L'espace de chois PID est conforme${normal}"
 fi
-echo "----------------------------------------------------------------------------------------"
+
 echo -e "\nObfuscation  des  adresses mémoire  kernel"
 a=1
 val=$(sysctl kernel.kptr_restrict | tail -c2)
@@ -1002,7 +1010,7 @@ else
         echo -e "${red}Obfuscation  des  adresses mémoire  kernel désactivé${normal}"
 	echo -e "Pour mise en place : sysctl -w kernel.kptr_restrict=1"
 fi
-echo "----------------------------------------------------------------------------------------"
+
 echo -e "\nRestriction d’accès au  buffer  dmesg"
 a=1
 val=$(sysctl kernel.dmesg_restrict | tail -c2)
@@ -1014,9 +1022,7 @@ else
 	echo -e "Pour mise en place : sysctl -w kernel.dmesg_restrict=1"
 fi
 
-
 # Restreint l’utilisation du sous système perf
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nRestriction de l’utilisation du sous système perf : paranoid"
 a=2
 val=$(sysctl kernel.perf_event_paranoid | tail -c2)
@@ -1028,8 +1034,6 @@ else
 	echo -e "Pour mise en place : sysctl -w kernel.perf_event_paranoid=2"
 fi
 
-
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nRestriction de l’utilisation du sous système perf : max sample rate"
 a=1
 val=$(sysctl kernel.perf_event_max_sample_rate | tail -c2)
@@ -1041,7 +1045,6 @@ else
 	echo -e "Pour mise en place : sysctl -w kernel.perf_event_max_sample_rate=1"
 fi
 
-echo "----------------------------------------------------------------------------------------"
 echo -e "\nRestriction de l’utilisation du sous système perf : cpu time max"
 a=1
 val=$(sysctl kernel.perf_cpu_time_max_percent | tail -c2)
@@ -1053,9 +1056,9 @@ else
 	echo -e "Pour mise en place : sysctl -w kernel.perf_cpu_time_max_percent=1"
 fi
 
-
+#R24 Désactivation du chargement des modules noyau
 echo "----------------------------------------------------------------------------------------"
-echo -e "\n#R24 Désactivation du chargement des modules noyau"
+echo -e "\n${purple}#R24 Désactivation du chargement des modules noyau${normal}"
 a=1
 val=$(sysctl kernel.modules_disabled | tail -c2)
 if [ $val = $a ]
@@ -1069,7 +1072,9 @@ else
 fi
 
 
-echo -e "\n#R25 Configuration sysctl du module Yama"
+#R25 Configuration sysctl du module Yama"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R25 Configuration sysctl du module Yama${normal}"
 a=0
 val=$(sysctl kernel.yama.ptrace_scope | tail -c2)
 if [ $val = $a ]
@@ -1082,19 +1087,30 @@ else
 fi
 
 
-echo "#R26 Désactivation des comptes utilisateurs inutilisés${blue} Non évaluée${normal}"
-echo "#R27 Désactivation des comptes de services${blue} Non évaluée${normal}"
-echo "#R28 Unicité et exclusivité des comptes de services système${blue} Non évaluée${normal}"
-echo "#R29 Délai d’expiration de sessions utilisateurs${blue} Non évaluée${normal}"
-echo "#R30 Applications utilisant PAM${blue} Non évaluée${normal}"
-echo "#R31 Sécurisation des services réseau d’authentification PAM${blue} Non évaluée${normal}"
-echo "#R32 Protection des mots de passe stockés${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R26 Désactivation des comptes utilisateurs inutilisés${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R27 Désactivation des comptes de services${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R28 Unicité et exclusivité des comptes de services système${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R29 Délai d’expiration de sessions utilisateurs${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R30 Applications utilisant PAM${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R31 Sécurisation des services réseau d’authentification PAM${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R32 Protection des mots de passe stockés${blue} Non évaluée${normal}"
 #remarque : ANSSI recommande sha512 mais maintenant yescrypt est pris par défaut car meilleur.
 #ANSSI pas mis à jour - étonnant ?
-echo "#R33 Sécurisation des accès aux bases utilisateurs distantes${blue} Non évaluée${normal}"
-echo "#R34 Séparation des comptes système et d’administrateur de l’annuaire${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R33 Sécurisation des accès aux bases utilisateurs distantes${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R34 Séparation des comptes système et d’administrateur de l’annuaire${blue} Non évaluée${normal}"
 
-echo "#R35 Valeur de umask"
+#R35 Valeur de umask
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R35 Valeur de umask${normal}"
 User_Umask_recommande=0077
 User_Umask=$(umask)
 if test $User_Umask_recommande != $User_Umask
@@ -1108,20 +1124,128 @@ else
       echo  "${green}l'umask est 0077. C'est la valeur recommandée.${normal}"
 fi
 
-echo "#R36 Droits d’accès aux fichiers de contenu sensible"
+#R36 Droits d’accès aux fichiers de contenu sensible
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R36 Droits d’accès aux fichiers de contenu sensible${normal}"
 echo "Les ﬁchiers à contenu sensible ne doivent être lisibles que par les utilisateurs ayant le strict besoin d’en connaître."
 echo "Quand ces ﬁchiers contiennent des mots de passe (ou des empreintes de mots de passe) ils ne doivent être lisibles que par root."
 echo "En revanche, les ﬁchiers publics qui contiennent la liste des utilisateurs sont lisibles par tout le monde, mais sont éditables uniquement par root."
-echo "Fichiers qui ne devrait être en lecture uniquement pour root:"
-ls -l /etc/gshadow
-ls -l /etc/shadow
+echo "La liste des fichiers qui ne devrait être en lecture uniquement pour root a été écrit dans le rapport avec les droits actuels."
+Ecrire_Entete "#R36 Droits d’accès aux fichiers de contenu sensible"
+Ecrire_Rapport "Liste des fichiers qui ne devrait être en lecture uniquement pour root:"
+ls -l /etc/gshadow >> $Nom_Rapport
+ls -l /etc/shadow >> $Nom_Rapport
+Ecrire_Separation
 
-echo "#R37 Exécutables avec bits setuid et setgid${blue} Non évaluée${normal}"
-echo "#R38 Exécutables setuid root${blue} Non évaluée${normal}"
-echo "#R39 Répertoires temporaires dédiés aux comptes${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R37 Exécutables avec bits setuid et setgid${normal}"
+echo "Seuls les programmes spéciﬁquement conçus pour être utilisés avec les bits setuid (ou setgid) peuvent avoir ces bits de privilèges positionnés."
+echo -e "\n${purple}#R38 Exécutables setuid root${normal}"
+echo "Les exécutables setuid doivent être le moins nombreux possible."
+echo "Lorsqu’il est attendu que seuls les administrateurs de la machine les exécutent, il faut leur retirer"
+echo "le bit set-uid et leur préférer des commandes comme su ou sudo, qui peuvent être surveillées."
+echo "La liste des fichiers setuid/setgid présents sur le système a été écrite dans le rapport."
+Ecrire_Entete "#R37 Exécutables avec bits setuid et setgid / #R38 Exécutables setuid root"
+Ecrire_Rapport "Voici une liste non exhaustive de ﬁchiers setuid root pouvant être rencontrés."
+Ecrire_Rapport "Tout exécutable non mentionné dans cette liste devrait être examiné avec une attention particulière."
+Ecrire_Rapport ""
+Ecrire_ligneTableauR38
+Ecrire_Rapport "#  \t\tExécutable\t\t\t | \t\tCommentaire\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /bin/mount\t\t\t\t\t | À désactiver, sauf si absolument nécessaire pour les utilisateurs.\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /bin/netreport\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /bin/ping6\t\t\t\t\t | (IPv6) Idem ping.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /bin/ping\t\t\t\t\t | (IPv4) Retirer droit setuid, sauf si un programme le requiert pour du monitoring.\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /bin/su\t\t\t\t\t | Changement d’utilisateur. Ne pas désactiver.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /bin/umount\t\t\t\t\t | À désactiver, sauf si absolument nécessaire pour les utilisateurs.\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /sbin/mount.nfs4\t\t\t\t | À désactiver si NFSv4 est inutilisé.\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /sbin/mount.nfs\t\t\t\t | À désactiver si NFSv2/3 est inutilisé.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /sbin/umount.nfs4\t\t\t\t | À désactiver si NFSv4 est inutilisé.\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /sbin/umount.nfs\t\t\t\t | À désactiver si NFSv2/3 est inutilisé.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /sbin/unix_chkpwd\t\t\t\t | Permet de vériﬁer le mot de passe utilisateur pour des programmes non root. À désactiver si inutilisé.\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/at\t\t\t\t\t | À désactiver si atd n’est pas utilisé.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/chage\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/chfn\t\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/chsh\t\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/crontab\t\t\t\t | À désactiver si cron n’est pas requis.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/fusermount\t\t\t\t | À désactiver sauf si des utilisateurs doivent monter des partitions FUSE.\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/gpasswd\t\t\t\t | À désactiver si pas d’authentiﬁcation de groupe.\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/locate\t\t\t\t | À désactiver. Remplacer par mlocate et slocate.\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/mail\t\t\t\t\t | À désactiver. Utiliser un mailer local comme ssmtp.\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/newgrp\t\t\t\t | À désactiver si pas d’authentiﬁcation de groupe.\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/passwd\t\t\t\t | À désactiver, sauf si des utilisateurs non root doivent pouvoir changer leur mot de passe.\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/pkexec\t\t\t\t | À désactiver si PolicyKit n’est pas utilisé.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/procmail\t\t\t\t | À désactiver sauf si procmail est requis.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/rcp\t\t\t\t\t | Obsolète. À désactiver.\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/rlogin\t\t\t\t | Obsolète. À désactiver.\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/rsh\t\t\t\t\t | Obsolète. À désactiver.\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/screen\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/sudo\t\t\t\t\t | Changement d’utilisateur. Ne pas désactiver.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/sudoedit\t\t\t\t | Idem sudo.\t\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/wall\t\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/bin/X\t\t\t\t\t | À désactiver sauf si le serveur X est requis.\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/lib/dbus-1.0/dbus-daemon-launch-helper\t | À désactiver quand D-BUS n’est pas utilisé.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/lib/openssh/ssh-keysign\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/lib/pt_chown\t\t\t\t | À désactiver (permet de changer le propriétaire des PTY avant l’existence de devfs).\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/libexec/utempter/utempter\t\t | À désactiver si le proﬁl utempter SELinux n’est pas utilisé.\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/sbin/exim4\t\t\t\t | À désactiver si Exim n’est pas utilisé.\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/sbin/suexec\t\t\t\t | À désactiver si le suexec Apache n’est pas utilisé.\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/sbin/traceroute\t\t\t\t | (IPv4) Idem ping.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport "# /usr/sbin/traceroute6\t\t\t\t | (IPv6) Idem ping.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_ligneTableauR38
+Ecrire_Rapport ""
+Ecrire_Rapport "Liste des fichiers setuid/setgid présents sur le système"
+find / -type f -perm /6000 -ls 2>/dev/null >> $Nom_Rapport
+Ecrire_Separation
+echo "Retirer les droits setuid ou setgid se fait au travers de la commande chmod :"
+echo "chmod u-s <fichier > (Retire le bit setuid)"
+echo "chmod g-s <fichier >  (Retire le bit setgid)"
 
-echo "#R40 Sticky bit et droits d’accès en écriture"
-Nom_Rapport="Rapport_"$(date '+%d-%m-%y')
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R39 Répertoires temporaires dédiés aux comptes${blue} Non évaluée${normal}"
+
+#R40 Sticky bit et droits d’accès en écriture
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R40 Sticky bit et droits d’accès en écriture${normal}"
 nb=$(find / -type d -perm -0002 -a \! -uid 0 -ls 2>/dev/null | grep "" -c)
 if [ $nb -ne 0 ]
 then 
@@ -1153,26 +1277,43 @@ else
         echo "${green}Il n'y a pas de fichier accessible en écriture par tous${normal}"
 fi
 
-echo "#R41 Sécurisation des accès pour les sockets et pipes nommées${blue} Non évaluée${normal}"
-echo "#R42 Services et daemons résidents en mémoire${blue} Non évaluée${normal}"
-echo "#R43 Durcissement et configuration du service syslog${blue} Non évaluée${normal}"
-echo "#R44 Cloisonnement du service syslog par chroot${blue} Non évaluée${normal}"
-echo "#R45 Cloisonnement du service syslog par container${blue} Non évaluée${normal}"
-echo "#R46 Journaux d’activité de service${blue} Non évaluée${normal}"
-echo "#R47 Partition dédiée pour les journaux${blue} Non évaluée${normal}"
-echo "#R48 Configuration du service local de messagerie${blue} Non évaluée${normal}"
-echo "#R49 Alias de messagerie des comptes de service${blue} Non évaluée${normal}"
-echo "#R50 Journalisation de l’activité par auditd${blue} Non évaluée${normal}"
-echo "#R51 Scellement et intégrité des fichiers${blue} Non évaluée${normal}"
-echo "#R52 Protection de la base de données des scellés${blue} Non évaluée${normal}"
-echo "#R53 Restriction des accès des services déployés${blue} Non évaluée${normal}"
-echo "#R54 Durcissement des composants de virtualisation${blue} Non évaluée${normal}"
-echo "#R55 Cage chroot et privilèges d’accès du service cloisonné${blue} Non évaluée${normal}"
-echo "#R56 Activation et utilisation de chroot par un service${blue} Non évaluée${normal}"
-echo "#R57 Groupe dédié à l’usage de sudo${blue} Non évaluée${normal}"
-echo "#R58 Directives de configuration sudo${blue} Non évaluée${normal}"
 echo "----------------------------------------------------------------------------------------"
-echo -e "\n#R58 Directives de configuration sudo"
+echo -e "\n${purple}#R41 Sécurisation des accès pour les sockets et pipes nommées${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R42 Services et daemons résidents en mémoire${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R43 Durcissement et configuration du service syslog${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R44 Cloisonnement du service syslog par chroot${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R45 Cloisonnement du service syslog par container${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R46 Journaux d’activité de service${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R47 Partition dédiée pour les journaux${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R48 Configuration du service local de messagerie${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R49 Alias de messagerie des comptes de service${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R50 Journalisation de l’activité par auditd${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R51 Scellement et intégrité des fichiers${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R52 Protection de la base de données des scellés${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R53 Restriction des accès des services déployés${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R54 Durcissement des composants de virtualisation${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R55 Cage chroot et privilèges d’accès du service cloisonné${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R56 Activation et utilisation de chroot par un service${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R57 Groupe dédié à l’usage de sudo${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+
+echo -e "\n${purple}#R58 Directives de configuration sudo${blue} Evaluée partiellement${normal}"
         nb=$(grep -c "noexec" /etc/sudoers)
         if [ $nb -eq 1 ]
         then
@@ -1183,13 +1324,16 @@ else
 	echo "         Defaults noexec,requiretty,use_pty,umask=0027"
 	echo "         Defaults ignore_dot,env_reset,passwd_timeout=1"
 fi
-echo "#R59 Authentification des utilisateurs exécutant sudo"
-echo "#R60 Privilèges des utilisateurs cible pour une commande sudo "
-echo "#R61 Limitation du nombre de commandes nécessitant l’option EXEC"
-echo "Recommandations évaluées dans la #R58"
-echo "----------------------------------------------------------------------------------------"
 
-echo "#R62 Du bon usage de la négation dans une spécification sudo"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R59 Authentification des utilisateurs exécutant sudo"
+echo "#R60 Privilèges des utilisateurs cible pour une commande sudo "
+echo "#R61 Limitation du nombre de commandes nécessitant l’option EXEC${normal}"
+echo "Recommandations évaluées dans la #R58"
+
+#R62 Du bon usage de la négation dans une spécification sudo
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R62 Du bon usage de la négation dans une spécification sudo${normal}"
         nb=$(grep -c "!/" /etc/sudoers)
         if [ $nb -eq 0 ]
         then
@@ -1200,7 +1344,10 @@ else
 	echo "        User ALL=ALL, !/bin/sh"
 	echo "         un cp de /bin/sh sous un autre nom suffit à le rendre utilisable"
 fi
-echo "#R63 Arguments explicites dans les spécifications sudo"
+
+#R63 Arguments explicites dans les spécifications sudo
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R63 Arguments explicites dans les spécifications sudo${normal}"
 	#pas de * caractère jocker dans le sudoers
         nb=$(grep -c "\*" /etc/sudoers)
         if [ $nb -eq 0 ]
@@ -1212,19 +1359,27 @@ else
 L’usage de ( \* wildcard) dans les règles doit être autant que possible évité. L’absence d’arguments auprès d’une commande doit être spécifiée par la présence d’une chaînevide (\"\")."
 fi
 
-echo "#R64 Du bon usage de sudoedit${blue} Non évaluée${normal}"
-echo "#R65 Activation des profils de sécurité AppArmor${blue} Non évaluée${normal}"
-echo "#R66 Activation de la politique targeted avec SELinux${blue} Non évaluée${normal}"
-echo "#R67 Paramétrage des booléens SELinux${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R64 Du bon usage de sudoedit${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R65 Activation des profils de sécurité AppArmor${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R66 Activation de la politique targeted avec SELinux${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R67 Paramétrage des booléens SELinux${blue} Non évaluée${normal}"
 # setsebool  -P allow_execheap=off"
 # setsebool  -P allow_execmem=off
 # setsebool  -P allow_execstack=off
 # setsebool  -P secure_mode_insmod=off
 # setsebool  -P ssh_sysadm_login=off
-echo "#R68 Désinstallation des outils de débogage de politique SELinux${blue} Non évaluée${normal}"
-echo "#R69 Confinement des utilisateurs interactifs non privilégiés${blue} Non évaluées${normal}"
 
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R68 Désinstallation des outils de débogage de politique SELinux${blue} Non évaluée${normal}"
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R69 Confinement des utilisateurs interactifs non privilégiés${blue} Non évaluées${normal}"
+echo "----------------------------------------------------------------------------------------"
 }
+
 fonct_fail () {
 clear
 echo "####################################################################################################################"
