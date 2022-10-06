@@ -385,7 +385,7 @@ nb=$(uname -a |grep -c "Debian")
 echo -e "\n${purple}#R8 Mises à jour régulières${normal}"
 if [ $nb -eq 1 ]
  then 
-        echo -e "Une simulation de mise à jour a été écrite dans l'annexe."
+        echo "Une simulation de mise à jour a été écrite dans l'annexe."
         Ecrire_Entete "#R8 - Simulation de mise à jour (apt-get)"
         apt-get update && apt-get upgrade -s >> $Nom_Annexe
         Ecrire_Separation
@@ -395,7 +395,7 @@ if [ -f /etc/redhat-release ]
 	nb=$(grep -c "CentOS" /etc/redhat-release)
 	if [ $nb -eq 1 ]
 	 then 
-                echo -e "Une simulation de mise à jour a été écrite dans l'annexe."
+                echo "Une simulation de mise à jour a été écrite dans l'annexe."
                 Ecrire_Entete "#R8 - Simulation de mise à jour (yum)"
                 yum check-update >> $Nom_Annexe
                 Ecrire_Separation
@@ -405,7 +405,7 @@ fi
 echo "----------------------------------------------------------------------------------------"
 #R9 Configuration matérielle
 echo -e "\n${purple}#R9 Configuration matérielle :${blue} Non évaluée${normal}"
-echo -e "Il est conseillé d’appliquer les recommandations de configuration mentionnées dans
+echo "Il est conseillé d’appliquer les recommandations de configuration mentionnées dans
 la note technique « Recommandations de configuration matérielle de postes clients et
 serveurs x86_4»"
 
@@ -415,9 +415,9 @@ echo -e "\n${purple}#R10 Architecture 32 et 64 bits${normal}"
 nb=$(arch | grep -c x86_64)
 if [ $nb -ne 1 ]
  then   
-        echo -e "${red}Vous devez privilégier une installation 64bits de votre système${normal}"
+        echo "${red}Vous devez privilégier une installation 64bits de votre système${normal}"
  else 
-        echo -e "${green}Vous avez privilégié une installation 64bits de votre système${normal}"
+        echo "${green}Vous avez privilégié une installation 64bits de votre système${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
@@ -426,16 +426,16 @@ echo -e "\n${purple}#R11 Directive de configuration de l’IOMMU${normal}"
 nb=$(grep -c "iommu=force"  /etc/default/grub)
 if [ $nb -eq 0 ]
  then   
-        echo -e "${red}L’activation du service d’IOMMU permet de protéger la mémoire du système${normal}"
-	echo -e "Ajoutez la variable iommu=force  dans /etc/default/grub"
+        echo "${red}L’activation du service d’IOMMU permet de protéger la mémoire du système${normal}"
+	echo "Ajoutez la variable iommu=force  dans /etc/default/grub"
  else
-        echo -e "${green}L’activation du service d’IOMMU permet de protéger la mémoire du système${normal}"
+        echo "${green}L’activation du service d’IOMMU permet de protéger la mémoire du système${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
 #R12 Partitionnement type
 echo -e "\n${purple}#R12 Partitionnement type${blue} Non évaluée${normal}"
-echo -e "Un partitionnement type a été écrit dans l'annexe."
+echo "Un partitionnement type a été écrit dans l'annexe."
 Ecrire_Entete "#R12 - Partitionnement type"
 Ecrire_ligneTableauR12
 Ecrire_Annexe "# \tPoint de montage\t | \tOptions\t\t\t | \tDescription\t\t\t\t\t\t #"
@@ -514,19 +514,19 @@ echo -e "\n${purple}#R21 Durcissement et surveillance des services soumis à des
 echo "----------------------------------------------------------------------------------------"
 #R22 Paramétrage des sysctl réseau
 echo -e "\n${purple}#R22 Paramétrage des sysctl réseau${normal}"
-echo -e "Préconisation : Pas de  routage  entre  les  interfaces"
+echo "Préconisation : Pas de  routage  entre  les  interfaces"
 val=$(sysctl net.ipv4.ip_forward | tail -c2)
 a=1
 if [ $val = $a ]
  then
-        echo -e "${red}Le routage est actif entre vos interfaces, est-ce normal ?${normal}"
+        echo "${red}Le routage est actif entre vos interfaces, est-ce normal ?${normal}"
 	echo "Pour mise en place : sysctl -w net.ipv4.ip_forward=0"
  else
         echo "${green}Le routage est désactivé entre vos interfaces${normal}"
 fi
 
 echo -e "\nFiltrage  par  chemin  inverse"
-echo -e "Préconisation : Pas de routage des flux étrangés (all)"
+echo "Préconisation : Pas de routage des flux étrangés (all)"
 a=0
 val=$(sysctl net.ipv4.conf.all.rp_filter | tail -c2)
 if [ $val = $a ]
@@ -550,103 +550,103 @@ if [ $val = $a ]
 fi
 
 echo -e "\nNe pas  envoyer  de  redirections  ICMP"
-echo -e "Préconisation : Pas de  redirection ICMP (all)"
+echo "Préconisation : Pas de  redirection ICMP (all)"
 a=1
 val=$(sysctl net.ipv4.conf.all.send_redirects | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}La redirection ICMP est activée${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.all.send_redirects=0"
+        echo "${red}La redirection ICMP est activée${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv4.conf.all.send_redirects=0"
  else
-        echo -e "${green}La redirection ICMP est déactivée${normal}"
+        echo "${green}La redirection ICMP est déactivée${normal}"
 fi
 
 echo -e "\nNe pas  envoyer  de  redirections  ICMP"
-echo -e "Préconisation : Pas de  redirection ICMP (default)"
+echo "Préconisation : Pas de  redirection ICMP (default)"
 a=1
 val=$(sysctl net.ipv4.conf.default.send_redirects | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}La redirection ICMP est activée${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.default.send_redirects=0"
+        echo "${red}La redirection ICMP est activée${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv4.conf.default.send_redirects=0"
  else
-        echo -e "${green}La redirection ICMP est déactivée${normal}"
+        echo "${green}La redirection ICMP est déactivée${normal}"
 fi
 
 echo -e "\nRefuser  les  paquets  de  source  routing"
-echo -e "Préconisation : Refuser  les  paquets  de  source  routing (all)"
+echo "Préconisation : Refuser  les  paquets  de  source  routing (all)"
 a=1
 val=$(sysctl net.ipv4.conf.all.accept_source_route | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le source  routing est activé${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.all.accept_source_route=0"
+        echo "${red}Le source  routing est activé${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv4.conf.all.accept_source_route=0"
  else
-        echo -e "${green}Le source  routing est déactivé${normal}"
+        echo "${green}Le source  routing est déactivé${normal}"
 fi
 
 echo -e "\nRefuser  les  paquets  de  source  routing"
-echo -e "Préconisation : Refuser  les  paquets  de  source  routing (default)"
+echo "Préconisation : Refuser  les  paquets  de  source  routing (default)"
 a=1
 val=$(sysctl net.ipv4.conf.default.accept_source_route | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le source  routing est activé${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.default.accept_source_route=0"
+        echo "${red}Le source  routing est activé${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv4.conf.default.accept_source_route=0"
  else
-        echo -e "${green}Le source  routing est déactivé${normal}"
+        echo "${green}Le source  routing est déactivé${normal}"
 fi
 
 echo -e "\nNe pas  accepter  les  ICMP de type  accept redirect"
-echo -e "Préconisation : Refuser  les  ICMP de type redirect (all)"
+echo "Préconisation : Refuser  les  ICMP de type redirect (all)"
 a=1
 val=$(sysctl net.ipv4.conf.all.accept_redirects | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le serveur accepte les flux de type ICMP redirect${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.all.accept_redirects=0"
+        echo "${red}Le serveur accepte les flux de type ICMP redirect${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv4.conf.all.accept_redirects=0"
  else
-        echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
+        echo "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
 
 echo -e "\nNe pas  accepter  les  ICMP de type  secure redirect"
-echo -e "Préconisation : Refuser  les  ICMP de type redirect (all)"
+echo "Préconisation : Refuser  les  ICMP de type redirect (all)"
 a=1
 val=$(sysctl net.ipv4.conf.all.secure_redirects | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le serveur accepte les flux de type ICMP redirect${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.all.secure_redirects=0"
+        echo "${red}Le serveur accepte les flux de type ICMP redirect${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv4.conf.all.secure_redirects=0"
  else
-        echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
+        echo "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
 
 echo -e "\nNe pas  accepter  les  ICMP de type  accept redirect"
-echo -e "Préconisation : Refuser  les  ICMP de type redirect (default)"
+echo "Préconisation : Refuser  les  ICMP de type redirect (default)"
 a=1
 val=$(sysctl net.ipv4.conf.default.accept_redirects | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le serveur accepte les flux de type ICMP redirect${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.default.accept_redirects=0"
+        echo "${red}Le serveur accepte les flux de type ICMP redirect${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv4.conf.default.accept_redirects=0"
  else
-        echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
+        echo "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
 
 echo -e "\nNe pas  accepter  les  ICMP de type  accept redirect"
-echo -e "Préconisation : Refuser  les  ICMP de type redirect (default)"
+echo "Préconisation : Refuser  les  ICMP de type redirect (default)"
 a=1
 val=$(sysctl net.ipv4.conf.default.secure_redirects | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le serveur accepte les flux de type ICMP redirect${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.default.secure_redirects=0"
+        echo "${red}Le serveur accepte les flux de type ICMP redirect${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv4.conf.default.secure_redirects=0"
  else
-        echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
+        echo "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
 
 echo -e "\nLogger  les  paquets  ayant  des IPs  anormales"
-echo -e "Préconisation : Logger  les  paquets  ayant  des IPs  anormales (default)"
+echo "Préconisation : Logger  les  paquets  ayant  des IPs  anormales (default)"
 a=1
 val=$(sysctl net.ipv4.conf.all.log_martians | tail -c2)
 if [ $val = $a ]
@@ -659,28 +659,28 @@ fi
 
 # RFC  1337
 echo -e "\nRFC 1337"
-echo -e "Préconisation : TIME-WAIT Assassination Hazards in TCP"
+echo "Préconisation : TIME-WAIT Assassination Hazards in TCP"
 a=1
 val=$(sysctl net.ipv4.tcp_rfc1337 | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${green}Problème tcp traité${normal}"
+        echo "${green}Problème tcp traité${normal}"
  else
-        echo -e "${red}Problème tcp non-traité${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.tcp_rfc1337=1"
+        echo "${red}Problème tcp non-traité${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv4.tcp_rfc1337=1"
 fi
 
 # Ignorer  les réponses  non  conformes à la RFC  1122
 echo -e "\nIgnorer  les réponses  non  conformes à la RFC 1122"
-echo -e "Préconisation : Ignorer  les réponses  non  conformes"
+echo "Préconisation : Ignorer  les réponses  non  conformes"
 a=1
 val=$(sysctl net.ipv4.icmp_ignore_bogus_error_responses | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${green}Réponses ignorées${normal}"
+        echo "${green}Réponses ignorées${normal}"
  else
-        echo -e "${red}Réponses ICMP traitées${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1"
+        echo "${red}Réponses ICMP traitées${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1"
 fi
 
 # Augmenter  la plage  pour  les  ports éphémères
@@ -689,9 +689,9 @@ a=$(sysctl net.ipv4.ip_local_port_range |cut -f 2)
 b=65535
 if [ "$a" -ne "$b" ]
  then
-        echo -e "${red}La plage de ports éphèmères est à augmenter${normal}"
+        echo "${red}La plage de ports éphèmères est à augmenter${normal}"
  else
-        echo -e "${green}La plage de ports éphèmères est conforme${normal}"
+        echo  "${green}La plage de ports éphèmères est conforme${normal}"
 fi
 echo -e "si besoin : sysctl -w net.ipv4.ip_local_port_range=\"32768 65535\""
 
@@ -701,10 +701,10 @@ a=1
 val=$(sysctl net.ipv4.tcp_syncookies | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${green}SYN cookies utilisés${normal}"
+        echo "${green}SYN cookies utilisés${normal}"
  else
-        echo -e "${red}SYN cookies ignorés${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv4.tcp_syncookies=1"
+        echo "${red}SYN cookies ignorés${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv4.tcp_syncookies=1"
 fi
 
 echo "-e \nDésactiver  le  support  des "router  solicitations" (all)"
@@ -712,10 +712,10 @@ a=1
 val=$(sysctl net.ipv6.conf.all.router_solicitations  | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le support est activé${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.router_solicitations=0"
+        echo "${red}Le support est activé${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv6.conf.all.router_solicitations=0"
  else
-        echo -e "${green}Le support est désactivé${normal}"
+        echo "${green}Le support est désactivé${normal}"
 fi
 
 echo -e "\nDésactiver  le  support  des "router  solicitations" (default)"
@@ -723,10 +723,10 @@ a=1
 val=$(sysctl net.ipv6.conf.default.router_solicitations | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le support est activé${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.router_solicitations=0"
+        echo "${red}Le support est activé${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv6.conf.default.router_solicitations=0"
  else
-        echo -e "${green}Le support est désactivé${normal}"
+        echo "${green}Le support est désactivé${normal}"
 fi
 
 echo -e "\nNe pas  accepter  les "routers  preferences" par "router  advertisements"(all)"
@@ -734,10 +734,10 @@ a=1
 val=$(sysctl net.ipv6.conf.all.accept_ra_rtr_pref | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le support est activé ${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_ra_rtr_pref=0"
+        echo "${red}Le support est activé ${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_ra_rtr_pref=0"
  else
-        echo -e "${green}Le support est désactivé${normal}"
+        echo "${green}Le support est désactivé${normal}"
 fi
 
 echo -e "\nNe pas  accepter  les "router  preferences" par "router  advertisements"(default)"
@@ -745,10 +745,10 @@ a=1
 val=$(sysctl net.ipv6.conf.default.accept_ra_rtr_pref | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le support est activé ${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_ra_rtr_pref=0"
+        echo "${red}Le support est activé ${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_ra_rtr_pref=0"
  else
-        echo -e "${green}Le support est désactivé${normal}"
+        echo "${green}Le support est désactivé${normal}"
 fi
 
 echo -e "\nPas de  configuration  auto  des  prefix  par "router  advertisements"(all)"
@@ -756,10 +756,10 @@ a=1
 val=$(sysctl net.ipv6.conf.all.accept_ra_pinfo | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le support est activé ${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_ra_pinfo=0"
+        echo "${red}Le support est activé ${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_ra_pinfo=0"
  else
-        echo -e "${green}Le support est désactivé${normal}"
+        echo "${green}Le support est désactivé${normal}"
 fi
 
 echo "Pas de  configuration  auto  des  prefix  par "router  advertisements"(default)"
@@ -767,10 +767,10 @@ a=1
 val=$(sysctl net.ipv6.conf.default.accept_ra_pinfo | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le support est activé ${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_ra_pinfo=0"
+        echo "${red}Le support est activé ${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_ra_pinfo=0"
  else
-        echo -e "${green}Le support est désactivé${normal}"
+        echo "${green}Le support est désactivé${normal}"
 fi
 
 echo -e "\nPas d’apprentissage  du  routeur  par défaut  par "router  advertisements"(all)"
@@ -778,21 +778,21 @@ a=1
 val=$(sysctl net.ipv6.conf.all.accept_ra_defrtr | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le support est activé ${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_ra_defrtr=0"
+        echo "${red}Le support est activé ${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_ra_defrtr=0"
  else
-        echo -e "${green}Le support est désactivé${normal}"
+        echo "${green}Le support est désactivé${normal}"
 fi
 
-echo -e "Pas d’apprentissage  du  routeur  par défaut  par "router  advertisements"(default)"
+echo "Pas d’apprentissage  du  routeur  par défaut  par "router  advertisements"(default)"
 a=1
 val=$(sysctl net.ipv6.conf.default.accept_ra_defrtr | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le support est activé ${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_ra_defrtr=0"
+        echo "${red}Le support est activé ${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_ra_defrtr=0"
  else
-        echo -e "${green}Le support est désactivé${normal}"
+        echo "${green}Le support est désactivé${normal}"
 fi
 
 echo -e "\nPas de  configuration  auto  des  adresses à partir  des "router advertisements"(all)"
@@ -800,21 +800,21 @@ a=1
 val=$(sysctl net.ipv6.conf.all.autoconf| tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le support est activé ${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.autoconf=0"
+        echo "${red}Le support est activé ${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv6.conf.all.autoconf=0"
  else
-        echo -e "${green}Le support est désactivé${normal}"
+        echo "${green}Le support est désactivé${normal}"
 fi
 
-echo -e "Pas de configuration auto des adresses à partir des "router advertisements"(default)"
+echo "Pas de configuration auto des adresses à partir des "router advertisements"(default)"
 a=1
 val=$(sysctl net.ipv6.conf.default.autoconf | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Le support est activé ${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.autoconf=0"
+        echo "${red}Le support est activé ${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv6.conf.default.autoconf=0"
  else
-        echo -e "${green}Le support est désactivé${normal}"
+        echo "${green}Le support est désactivé${normal}"
 fi
 
 echo -e "\nNe pas accepter les ICMP de type redirect (all)"
@@ -822,21 +822,21 @@ a=1
 val=$(sysctl net.ipv6.conf.all.accept_redirects | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Les ICMP redirect sont acceptées${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_redirects=0"
+        echo "${red}Les ICMP redirect sont acceptées${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_redirects=0"
  else
-        echo -e "${green}Les ICMP redirect sont refusées${normal}"
+        echo "${green}Les ICMP redirect sont refusées${normal}"
 fi
 
-echo -e "Ne pas  accepter  les  ICMP de type  redirect (default)"
+echo "Ne pas  accepter  les  ICMP de type  redirect (default)"
 a=1
 val=$(sysctl net.ipv6.conf.default.accept_redirects | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Les ICMP redirect sont acceptées${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_redirects=0"
+        echo "${red}Les ICMP redirect sont acceptées${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_redirects=0"
  else
-        echo -e "${green}Les ICMP redirect sont refusées${normal}"
+        echo "${green}Les ICMP redirect sont refusées${normal}"
 fi
 
 echo -e "\nRefuser  les  packets  de  source  routing (all)"
@@ -844,10 +844,10 @@ a=1
 val=$(sysctl net.ipv6.conf.all.accept_source_route | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Les packets de source routing sont acceptés${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_source_route=0"
+        echo "${red}Les packets de source routing sont acceptés${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_source_route=0"
  else
-        echo -e "${green}Les packets de source routing sont refusés${normal}"
+        echo "${green}Les packets de source routing sont refusés${normal}"
 fi
 
 echo "Refuser  les  packets  de  source  routing(default)"
@@ -855,21 +855,21 @@ a=1
 val=$(sysctl net.ipv6.conf.default.accept_source_route | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Les packets de source routing sont acceptés${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_source_route=0"
+        echo "${red}Les packets de source routing sont acceptés${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_source_route=0"
  else
-        echo -e "${green}Les packets de source routing sont refusés${normal}"
+        echo "${green}Les packets de source routing sont refusés${normal}"
 fi
 
-echo "\nNombre  maximal d’adresses  autoconfigurées par  interface (all)"
+echo -e "\nNombre  maximal d’adresses  autoconfigurées par  interface (all)"
 a=0
 val=$(sysctl net.ipv6.conf.all.max_addresses | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Les packets de source routing sont acceptés${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.max_addresses=1"
+        echo "${red}Les packets de source routing sont acceptés${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv6.conf.all.max_addresses=1"
  else
-        echo -e "${green}Les packets de source routing sont refusés${normal}"
+        echo "${green}Les packets de source routing sont refusés${normal}"
 fi
 
 echo "Nombre  maximal d’adresses  autoconfigurées par  interface (default)"
@@ -877,24 +877,24 @@ a=0
 val=$(sysctl net.ipv6.conf.default.max_addresses | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Les packets de source routing sont acceptés${normal}"
-	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.max_addresses=1"
+        echo "${red}Les packets de source routing sont acceptés${normal}"
+	echo "Pour mise en place : sysctl -w net.ipv6.conf.default.max_addresses=1"
  else
-        echo -e "${green}Les packets de source routing sont refusés${normal}"
+        echo "${green}Les packets de source routing sont refusés${normal}"
 fi
 
 #R23 Paramétrage des sysctl système
 echo "----------------------------------------------------------------------------------------"
 echo -e "\n${purple}#R23 Paramétrage des sysctl système${normal}"
-echo -e "Désactivation  des  SysReq"
+echo "Désactivation  des  SysReq"
 a=1
 val=$(sysctl kernel.sysrq | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Les requètes systèmes sont activées${normal}"
-	echo -e "Pour mise en place : sysctl -w kernel.sysrq=0"
+        echo "${red}Les requètes systèmes sont activées${normal}"
+	echo "Pour mise en place : sysctl -w kernel.sysrq=0"
  else
-        echo -e "${green}Les requètes systèmes sont activées${normal}"
+        echo "${green}Les requètes systèmes sont activées${normal}"
 fi
 
 
@@ -903,10 +903,10 @@ a=1
 val=$(sysctl fs.suid_dumpable | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Les core dump sont possibles${normal}"
-	echo -e "Pour mise en place : sysctl -w fs.suid_dumpable=0"
+        echo "${red}Les core dump sont possibles${normal}"
+	echo "Pour mise en place : sysctl -w fs.suid_dumpable=0"
  else
-        echo -e "${green}Les core dump sont désactivés${normal}"
+        echo "${green}Les core dump sont désactivés${normal}"
 fi
 
 echo -e "\nInterdiction de déréférencer des liens (symlinks) vers des fichiers dont l’utilisateur courant n’est pas le propriétaire"
@@ -914,10 +914,10 @@ a=0
 val=$(sysctl fs.protected_symlinks| tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Les déréférencements sont possibles${normal}"
-	echo -e "Pour mise en place : sysctl -w fs.protected_symlinks=1"
+        echo "${red}Les déréférencements sont possibles${normal}"
+	echo "Pour mise en place : sysctl -w fs.protected_symlinks=1"
  else
-        echo -e "${green}Le déréférencement des liens symboliques est désactivé${normal}"
+        echo "${green}Le déréférencement des liens symboliques est désactivé${normal}"
 fi
 
 echo "Interdiction de déréférencer des liens (hardlinks) vers des fichiers dont l’utilisateur courant n’est pas le  propriétaire"
@@ -925,10 +925,10 @@ a=0
 val=$(sysctl fs.protected_hardlinks| tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${red}Les déréférencements sont possibles${normal}"
-	echo -e "Pour mise en place : sysctl -w fs.protected_hardlinks=1"
+        echo "${red}Les déréférencements sont possibles${normal}"
+	echo "Pour mise en place : sysctl -w fs.protected_hardlinks=1"
  else
-        echo -e "${green}Le déréférencement des liens symboliques est désactivé${normal}"
+        echo "${green}Le déréférencement des liens symboliques est désactivé${normal}"
 fi
 
 echo -e "\nActivation de l'ASLR"
@@ -936,10 +936,10 @@ a=2
 val=$(sysctl kernel.randomize_va_space| tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${green}L'ASLR est activée${normal}"
+        echo "${green}L'ASLR est activée${normal}"
  else
-	echo -e "${red}L'ASLR n'est pas activée${normal}"
-	echo -e "Pour mise en place : sysctl -w kernel.randomize_va_space=2"
+	echo "${red}L'ASLR n'est pas activée${normal}"
+	echo "Pour mise en place : sysctl -w kernel.randomize_va_space=2"
 fi
 
 echo -e "\nInterdiction  de  mapper  de la mémoire  dans  les  adresses  basses  "
@@ -947,10 +947,10 @@ a=$(sysctl vm.mmap_min_addr |cut -d" " -f 3)
 b=65536
 if [ "$a" -ne "$b" ]
 then
-        echo -e "${red}Il est possible de mapper la mémoire dans les adresses basses${normal}"
-	echo -e "Pour mise en place : sysctl -w vm.mmap_min_addr=65536"
+        echo "${red}Il est possible de mapper la mémoire dans les adresses basses${normal}"
+	echo "Pour mise en place : sysctl -w vm.mmap_min_addr=65536"
  else
-        echo -e "${green}La plage de mémoire adressable est conforme${normal}"
+        echo "${green}La plage de mémoire adressable est conforme${normal}"
 fi
 
 # Espace  de choix  plus  grand  pour  les  valeurs  de PID
@@ -959,10 +959,10 @@ a=$(sysctl kernel.pid_max |cut -d" " -f 3)
 b=65536
 if [ "$a" -ne "$b" ]
  then
-        echo -e "${red}Il'espace de choix pour les valeurs de PID doit être augementé${normal}"
-	echo -e "Pour mise en place : sysctl -w kernel.pid_max=65536"
+        echo "${red}Il'espace de choix pour les valeurs de PID doit être augementé${normal}"
+	echo "Pour mise en place : sysctl -w kernel.pid_max=65536"
  else
-        echo -e "${green}L'espace de chois PID est conforme${normal}"
+        echo "${green}L'espace de chois PID est conforme${normal}"
 fi
 
 echo -e "\nObfuscation  des  adresses mémoire  kernel"
@@ -970,10 +970,10 @@ a=1
 val=$(sysctl kernel.kptr_restrict | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${green}Obfuscation  des  adresses mémoire  kernel activé${normal}"
+        echo "${green}Obfuscation  des  adresses mémoire  kernel activé${normal}"
  else
-        echo -e "${red}Obfuscation  des  adresses mémoire  kernel désactivé${normal}"
-	echo -e "Pour mise en place : sysctl -w kernel.kptr_restrict=1"
+        echo "${red}Obfuscation  des  adresses mémoire  kernel désactivé${normal}"
+	echo "Pour mise en place : sysctl -w kernel.kptr_restrict=1"
 fi
 
 echo -e "\nRestriction d’accès au  buffer  dmesg"
@@ -981,10 +981,10 @@ a=1
 val=$(sysctl kernel.dmesg_restrict | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${green}Accès au buffer dmesg restreint${normal}"
+        echo "${green}Accès au buffer dmesg restreint${normal}"
  else
-        echo -e "${red}L'accès au buffer dmesg n'est pas restreint${normal}"
-	echo -e "Pour mise en place : sysctl -w kernel.dmesg_restrict=1"
+        echo "${red}L'accès au buffer dmesg n'est pas restreint${normal}"
+	echo "Pour mise en place : sysctl -w kernel.dmesg_restrict=1"
 fi
 
 # Restreint l’utilisation du sous système perf
@@ -993,10 +993,10 @@ a=2
 val=$(sysctl kernel.perf_event_paranoid | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${green}Accès au sous systeme perf restreint${normal}"
+        echo "${green}Accès au sous systeme perf restreint${normal}"
  else
-        echo -e "${red}L'accès au sous systeme perf n'est pas restreint${normal}"
-	echo -e "Pour mise en place : sysctl -w kernel.perf_event_paranoid=2"
+        echo "${red}L'accès au sous systeme perf n'est pas restreint${normal}"
+	echo "Pour mise en place : sysctl -w kernel.perf_event_paranoid=2"
 fi
 
 echo -e "\nRestriction de l’utilisation du sous système perf : max sample rate"
@@ -1004,10 +1004,10 @@ a=1
 val=$(sysctl kernel.perf_event_max_sample_rate | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${green}Accès au sous systeme perf max sample rate ${normal}"
+        echo "${green}Accès au sous systeme perf max sample rate ${normal}"
  else
-        echo -e "${red}L'accès au sous systeme perf n'est pas restreint${normal}"
-	echo -e "Pour mise en place : sysctl -w kernel.perf_event_max_sample_rate=1"
+        echo "${red}L'accès au sous systeme perf n'est pas restreint${normal}"
+	echo "Pour mise en place : sysctl -w kernel.perf_event_max_sample_rate=1"
 fi
 
 echo -e "\nRestriction de l’utilisation du sous système perf : cpu time max"
@@ -1015,10 +1015,10 @@ a=1
 val=$(sysctl kernel.perf_cpu_time_max_percent | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${green}Accès au sous systeme perf max sample rate ${normal}"
+        echo "${green}Accès au sous systeme perf max sample rate ${normal}"
  else
-        echo -e "${red}L'accès au sous systeme perf n'est pas restreint${normal}"
-	echo -e "Pour mise en place : sysctl -w kernel.perf_cpu_time_max_percent=1"
+        echo "${red}L'accès au sous systeme perf n'est pas restreint${normal}"
+	echo "Pour mise en place : sysctl -w kernel.perf_cpu_time_max_percent=1"
 fi
 
 #R24 Désactivation du chargement des modules noyau
@@ -1028,12 +1028,12 @@ a=1
 val=$(sysctl kernel.modules_disabled | tail -c2)
 if [ $val = $a ]
  then
-        echo -e "${green}Le chargement des modules noyau est désactivé${normal}"
+        echo "${green}Le chargement des modules noyau est désactivé${normal}"
  else
-        echo -e "${red}Le chargement des modules noyau est activé${normal}"
-	echo -e "Pour mise en place : sysctl -w kernel.modules_disabled=1"
-	echo -e "Il est conseillé de mettre directement à jour votre fichier /etc/sysctl.conf"
-	echo -e "en ajoutant la ligne suivante : kernel.modules_disabled = 1"
+        echo "${red}Le chargement des modules noyau est activé${normal}"
+	echo "Pour mise en place : sysctl -w kernel.modules_disabled=1"
+	echo "Il est conseillé de mettre directement à jour votre fichier /etc/sysctl.conf"
+	echo "en ajoutant la ligne suivante : kernel.modules_disabled = 1"
 fi
 
 #R25 Configuration sysctl du module Yama"
@@ -1043,11 +1043,11 @@ a=0
 val=$(sysctl kernel.yama.ptrace_scope | tail -c2)
 if [ $val = $a ]
  then
-	echo -e "${red}Il est recommandé de charger le module de sécurité Yama lors du démarrage${normal}"
-	echo -e "Vous pouvez par exemple passer l'argument security=yama au noyau"
-	echo -e "et configurer la sysctl kernel.yama.ptrace_scope à une valeur au moins égale à 1"
+	echo "${red}Il est recommandé de charger le module de sécurité Yama lors du démarrage${normal}"
+	echo "Vous pouvez par exemple passer l'argument security=yama au noyau"
+	echo "et configurer la sysctl kernel.yama.ptrace_scope à une valeur au moins égale à 1"
  else
-	echo -e "${green}Le module Yama est chargé${normal}"
+	echo "${green}Le module Yama est chargé${normal}"
 fi
 
 #R26 Désactivation des comptes utilisateurs inutilisés
@@ -1321,7 +1321,7 @@ if [ $nb -eq 1 ]
  then
         echo "${green}L'execution des subsystem est interdite${normal}"
  else
-        echo -e "${red}L'execution des subsystem est autorisé${normal}"
+        echo "${red}L'execution des subsystem est autorisé${normal}"
 	echo "Ajouter les lignes suivants à votre sudoers :"
 	echo "         Defaults noexec,requiretty,use_pty,umask=0027"
 	echo "         Defaults ignore_dot,env_reset,passwd_timeout=1"
@@ -1339,7 +1339,7 @@ if [ $nb -eq 0 ]
  then
         echo "${green}Pas de négation dans votre fichier sudoers${normal}"
  else
-        echo -e "${red}L'utilisation des négations est déconseillée${normal}"
+        echo "${red}L'utilisation des négations est déconseillée${normal}"
 	echo "Exemple :"
 	echo "        User ALL=ALL, !/bin/sh"
 	echo "         un cp de /bin/sh sous un autre nom suffit à le rendre utilisable"
@@ -1354,7 +1354,7 @@ if [ $nb -eq 0 ]
  then
         echo "${green}Pas de /* dans votre fichier sudoers${normal}"
  else
-        echo -e "${red}L'utilisation des carat est déconseillée${normal}"
+        echo "${red}L'utilisation des carat est déconseillée${normal}"
 	echo "Toutes les commandes du fichier sudoers doivent préciser strictement les arguments autorisés à être utilisés pour un utilisateur donné."
         echo "L’usage de ( \* wildcard) dans les règles doit être autant que possible évité."
         echo "L’absence d’arguments auprès d’une commande doit être spécifiée par la présence d’une chaînevide (\"\")."
