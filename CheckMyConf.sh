@@ -27,11 +27,11 @@ darkgray="$bold"$(tput setaf 0)           # bold black = dark gray text
 white="$bold$gray"                        # bright white text
 
 ####################################################################################################################
-# Obj : On fixe le nom du rapport                                                                                  #
+# Obj : On fixe le nom du rapport et de l'annexe pour la vérification des critères de l'ANSSI                      #
 ####################################################################################################################
 
-Nom_Fichier="Rapport_"$(date '+%d-%m-%y-%H%M')
-Nom_Rapport="Annexe_"$(date '+%d-%m-%y-%H%M')
+Nom_Rapport="Rapport_"$(date '+%d-%m-%y-%H%M')
+Nom_Annexe="Annexe_"$(date '+%d-%m-%y-%H%M')
 
 ####################################################################################################################
 # Obj : vérifier que le script est executé par root                                                                #
@@ -292,40 +292,40 @@ fi
 }
 
 ####################################################################################################################
-#Obj : Outils pour création de rapports                                                                            #
+#Obj : Outils pour création de l'annexe                                                                            #
 ####################################################################################################################
-function Ecrire_Rapport()
+function Ecrire_Annexe()
 {
-  P_Contenu_Rapport=$1
+  P_Contenu_Annexe=$1
 
-  echo -e $P_Contenu_Rapport >> $Nom_Rapport
+  echo -e $P_Contenu_Annexe >> $Nom_Annexe
 }
 
 function Ecrire_Entete()
 {
   P_Nom_Entete=$1
 
-  Ecrire_Rapport "----------------------------------------------------------------------------"
-  Ecrire_Rapport " $P_Nom_Entete"
-  Ecrire_Rapport "----------------------------------------------------------------------------"
-  Ecrire_Rapport
+  Ecrire_Annexe "----------------------------------------------------------------------------"
+  Ecrire_Annexe " $P_Nom_Entete"
+  Ecrire_Annexe "----------------------------------------------------------------------------"
+  Ecrire_Annexe
 }
 
 function Ecrire_Separation()
 {
-  Ecrire_Rapport
-  Ecrire_Rapport "----------------------------------------------------------------------------"
-  Ecrire_Rapport
+  Ecrire_Annexe
+  Ecrire_Annexe "----------------------------------------------------------------------------"
+  Ecrire_Annexe
 }
 
 function Ecrire_ligneTableauR12()
 {
-  Ecrire_Rapport "#--------------------------------------------------------------------------------------------------------------------------------#"
+  Ecrire_Annexe "#--------------------------------------------------------------------------------------------------------------------------------#"
 }
 
 function Ecrire_ligneTableauR38()
 {
-  Ecrire_Rapport "#----------------------------------------------------------------------------------------------------------------------------------------------------------------#"
+  Ecrire_Annexe "#----------------------------------------------------------------------------------------------------------------------------------------------------------------#"
 }
 
 
@@ -343,9 +343,9 @@ echo "Recommandations issues du Guide ANSSI-BP-028 du 22 février 2019"
 echo "----------------------------------------------------------------------------------------------------------"
 #R1 Minimisation des services installés
 echo -e "\n${purple}#R1 Liste des services installés sur le serveur${normal}"
-echo -e "La liste des services installés a été écrite dans le rapport."
+echo -e "La liste des services installés a été écrite dans l'annexe."
         Ecrire_Entete "#R1 - Liste des services installés sur le serveur"
-        service --status-all >> $Nom_Rapport
+        service --status-all >> $Nom_Annexe
         Ecrire_Separation
 
 echo "----------------------------------------------------------------------------------------"
@@ -410,9 +410,9 @@ nb=$(uname -a |grep -c "Debian")
 echo -e "\n${purple}#R8 Mises à jour régulières${normal}"
 if [ $nb -eq 1 ]
 then 
-        echo -e "Une simulation de mise à jour a été écrite dans le rapport."
+        echo -e "Une simulation de mise à jour a été écrite dans l'annexe."
         Ecrire_Entete "#R8 - Simulation de mise à jour (apt-get)"
-        apt-get update && apt-get upgrade -s >> $Nom_Rapport
+        apt-get update && apt-get upgrade -s >> $Nom_Annexe
         Ecrire_Separation
 fi
 
@@ -421,9 +421,9 @@ then
 	nb=$(grep -c "CentOS" /etc/redhat-release)
 	if [ $nb -eq 1 ]
 	then 
-                echo -e "Une simulation de mise à jour a été écrite dans le rapport."
+                echo -e "Une simulation de mise à jour a été écrite dans l'annexe."
                 Ecrire_Entete "#R8 - Simulation de mise à jour (yum)"
-                yum check-update >> $Nom_Rapport
+                yum check-update >> $Nom_Annexe
                 Ecrire_Separation
 		
 	fi
@@ -463,44 +463,43 @@ fi
 echo "----------------------------------------------------------------------------------------"
 #R12 Partitionnement type
 echo -e "\n${purple}#R12 Partitionnement type${blue} Non évaluée${normal}"
-echo -e "Un partitionnement type a été écrit dans le rapport."
+echo -e "Un partitionnement type a été écrit dans l'annexe."
 Ecrire_Entete "#R12 - Partitionnement type"
-Ecrire_Rapport ""
 Ecrire_ligneTableauR12
-Ecrire_Rapport "# \tPoint de montage\t | \tOptions\t\t\t | \tDescription\t\t\t\t\t\t #"
+Ecrire_Annexe "# \tPoint de montage\t | \tOptions\t\t\t | \tDescription\t\t\t\t\t\t #"
 Ecrire_ligneTableauR12
-Ecrire_Rapport "# \t/\t\t\t | <sans option>\t\t | Partition racine, contient le reste de l’arborescence\t #"
+Ecrire_Annexe "# \t/\t\t\t | <sans option>\t\t | Partition racine, contient le reste de l’arborescence\t #"
 Ecrire_ligneTableauR12
-Ecrire_Rapport "# \t/boot\t\t\t | nosuid,nodev,noexec\t\t | Contient le noyau et le chargeur de démarrage.\t\t #"
-Ecrire_Rapport "# \t\t\t\t | (noauto optionnel)\t\t | nécessaire une fois le boot terminé\t\t\t\t #"
-Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | (sauf mise à jour)\t\t\t\t\t\t #"
+Ecrire_Annexe "# \t/boot\t\t\t | nosuid,nodev,noexec\t\t | Contient le noyau et le chargeur de démarrage.\t\t #"
+Ecrire_Annexe "# \t\t\t\t | (noauto optionnel)\t\t | nécessaire une fois le boot terminé\t\t\t\t #"
+Ecrire_Annexe "# \t\t\t\t | \t\t\t\t | (sauf mise à jour)\t\t\t\t\t\t #"
 Ecrire_ligneTableauR12
-Ecrire_Rapport "# \t/opt\t\t\t | nosuid,nodev(ro optionnel)\t | Packages  additionnels  au  système.\t\t\t\t  #"
-Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | Montage en lecture seule si non utilisé\t\t\t #"
+Ecrire_Annexe "# \t/opt\t\t\t | nosuid,nodev(ro optionnel)\t | Packages  additionnels  au  système.\t\t\t\t  #"
+Ecrire_Annexe "# \t\t\t\t | \t\t\t\t | Montage en lecture seule si non utilisé\t\t\t #"
 Ecrire_ligneTableauR12
-Ecrire_Rapport "# \t/tmp\t\t\t | nosuid,nodev,noexec\t\t | Fichiers temporaires. Ne doit contenir\t\t\t #"
-Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | que des éléments non exécutables.\t\t\t\t #"
-Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | Nettoyé après redémarrage\t\t\t\t\t #"
+Ecrire_Annexe "# \t/tmp\t\t\t | nosuid,nodev,noexec\t\t | Fichiers temporaires. Ne doit contenir\t\t\t #"
+Ecrire_Annexe "# \t\t\t\t | \t\t\t\t | que des éléments non exécutables.\t\t\t\t #"
+Ecrire_Annexe "# \t\t\t\t | \t\t\t\t | Nettoyé après redémarrage\t\t\t\t\t #"
 Ecrire_ligneTableauR12
-Ecrire_Rapport "# \t/srv\t\t\t | nosuid,nodev\t\t\t | Contient des fichiers servis par un\t\t\t\t #"
-Ecrire_Rapport "# \t\t\t\t | (noexec,ro optionnels)\t | service type web, ftp, etc.\t\t\t\t\t #"
+Ecrire_Annexe "# \t/srv\t\t\t | nosuid,nodev\t\t\t | Contient des fichiers servis par un\t\t\t\t #"
+Ecrire_Annexe "# \t\t\t\t | (noexec,ro optionnels)\t | service type web, ftp, etc.\t\t\t\t\t #"
 Ecrire_ligneTableauR12
-Ecrire_Rapport "#  \t/home\t\t\t | nosuid,nodev,noexec\t\t | Contient  les HOME utilisateurs.\t\t\t\t #"
-Ecrire_Rapport "#  \t\t\t\t | \t\t\t\t | Montage  en  lecture  seule  si  non utilisé\t\t\t #"
+Ecrire_Annexe "#  \t/home\t\t\t | nosuid,nodev,noexec\t\t | Contient  les HOME utilisateurs.\t\t\t\t #"
+Ecrire_Annexe "#  \t\t\t\t | \t\t\t\t | Montage  en  lecture  seule  si  non utilisé\t\t\t #"
 Ecrire_ligneTableauR12
-Ecrire_Rapport "#  \t/proc\t\t\t | hidepid=1\t\t\t | Contient des informations sur les processus\t\t\t #"
-Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | et le système\t\t\t\t\t\t #"
+Ecrire_Annexe "#  \t/proc\t\t\t | hidepid=1\t\t\t | Contient des informations sur les processus\t\t\t #"
+Ecrire_Annexe "# \t\t\t\t | \t\t\t\t | et le système\t\t\t\t\t\t #"
 Ecrire_ligneTableauR12
-Ecrire_Rapport "# \t/usr\t\t\t | nodev\t\t\t | Contient la majorité des utilitaires et\t\t\t #"
-Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | fichiers système\t\t\t\t\t\t #"
+Ecrire_Annexe "# \t/usr\t\t\t | nodev\t\t\t | Contient la majorité des utilitaires et\t\t\t #"
+Ecrire_Annexe "# \t\t\t\t | \t\t\t\t | fichiers système\t\t\t\t\t\t #"
 Ecrire_ligneTableauR12
-Ecrire_Rapport "# \t/var\t\t\t | nosuid,nodev,noexec\t\t | Partition contenant des fichiers variables\t\t\t #"
-Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | pendant  la  vie  du  système\t\t\t\t\t #"
-Ecrire_Rapport "# \t\t\t\t | \t\t\t\t | (mails, fichiers PID, bases de données d’un service)\t\t #"
+Ecrire_Annexe "# \t/var\t\t\t | nosuid,nodev,noexec\t\t | Partition contenant des fichiers variables\t\t\t #"
+Ecrire_Annexe "# \t\t\t\t | \t\t\t\t | pendant  la  vie  du  système\t\t\t\t\t #"
+Ecrire_Annexe "# \t\t\t\t | \t\t\t\t | (mails, fichiers PID, bases de données d’un service)\t\t #"
 Ecrire_ligneTableauR12
-Ecrire_Rapport "# \t/var/log\t\t | nosuid,nodev,noexec\t\t | Contient les logs du système\t\t\t\t\t #"
+Ecrire_Annexe "# \t/var/log\t\t | nosuid,nodev,noexec\t\t | Contient les logs du système\t\t\t\t\t #"
 Ecrire_ligneTableauR12
-Ecrire_Rapport "# \t/var/tmp\t\t | nosuid,nodev,noexec\t\t | Fichiers temporaires conservés après extinction\t\t #"
+Ecrire_Annexe "# \t/var/tmp\t\t | nosuid,nodev,noexec\t\t | Fichiers temporaires conservés après extinction\t\t #"
 Ecrire_ligneTableauR12
 Ecrire_Separation
 
@@ -523,9 +522,9 @@ echo "--------------------------------------------------------------------------
 #R15 Choix des dépôts de paquets
 echo -e "\n${purple}#R15 Choix des dépôts de paquets${normal}"
 echo "Préconisation: Seul les dépôts connus et offciels doivent etre utilisés"
-echo "Les dépôts utilisés ont été écrit dans le rapport."
+echo "Les dépôts utilisés ont été écrit dans l'annexe."
 Ecrire_Entete "#R15 - Liste des dépôts utilisés"
-cat /etc/apt/sources.list >> $Nom_Rapport
+cat /etc/apt/sources.list >> $Nom_Annexe
 Ecrire_Separation
 
 
@@ -1067,7 +1066,6 @@ else
 	echo -e "en ajoutant la ligne suivante : kernel.modules_disabled = 1"
 fi
 
-
 #R25 Configuration sysctl du module Yama"
 echo "----------------------------------------------------------------------------------------"
 echo -e "\n${purple}#R25 Configuration sysctl du module Yama${normal}"
@@ -1082,15 +1080,51 @@ else
 	echo -e "${green}Le module Yama est chargé${normal}"
 fi
 
+#R26 Désactivation des comptes utilisateurs inutilisés
+#R27 Désactivation des comptes de services
+echo "----------------------------------------------------------------------------------------"
+echo -e "\n${purple}#R26 Désactivation des comptes utilisateurs inutilisés${normal}"
+echo "Les comptes utilisateurs inutilisés doivent être désactivés au niveau du système."
+echo "Cette désactivation passe par l’invalidation du compte au niveau de son mot de passe"
+echo "(suppression du champ pw_passwd dans le shadow et shell de login à /bin/false)."
+echo -e "\n${purple}#R27 Désactivation des comptes de services${normal}"
+echo "Les comptes de service doivent être désactivés."
+echo -e "\nLa liste des comptes existants a été écrite dans l'annexe."
+Ecrire_Entete "#R26 Désactivation des comptes utilisateurs inutilisés / #R27 Désactivation des comptes de services"
+Ecrire_Annexe "Liste des comptes présents sur le système:"
+cat /etc/passwd >> $Nom_Annexe
+Ecrire_Annexe ""
+Ecrire_Annexe "Vous pouvez vérouiller un compte avc la commande suivante: usermod -L <compte>"
+Ecrire_Annexe "Vous pouvez désactiver son shell de login avec la commande suivante: usermod -s /bin/false <compte>"
+Ecrire_Annexe "Vous pouvez désactiver un compte avec la commande suivante: usermod --expiredate 1 <compte>"
+Ecrire_Separation
 
 echo "----------------------------------------------------------------------------------------"
-echo -e "\n${purple}#R26 Désactivation des comptes utilisateurs inutilisés${blue} Non évaluée${normal}"
-echo "----------------------------------------------------------------------------------------"
-echo -e "\n${purple}#R27 Désactivation des comptes de services${blue} Non évaluée${normal}"
-echo "----------------------------------------------------------------------------------------"
 echo -e "\n${purple}#R28 Unicité et exclusivité des comptes de services système${blue} Non évaluée${normal}"
+
+#R29 Délai d’expiration de sessions utilisateurs
 echo "----------------------------------------------------------------------------------------"
-echo -e "\n${purple}#R29 Délai d’expiration de sessions utilisateurs${blue} Non évaluée${normal}"
+echo -e "\n${purple}#R29 Délai d’expiration de sessions utilisateurs${normal}"
+Timeout=$(printenv TMOUT)
+if (test ! $Timeout)
+  then
+        echo "${red}Vous n'avez pas défini de timeout pour la session.${normal}"
+        echo "Vous pouvez le définir avec cette commande: echo TMOUT=120 >> /etc/environment"
+        echo "Vous pouvez mettre la valeur que vous désirez en secondes."
+  elif (test $Timeout -eq 0)
+    then
+        echo "${red}Vous avez désactivé le timeout pour la session, vous devriez le réactiver.${normal}"
+        echo "Vous pouvez le définir avec cette commande: echo TMOUT=120 >> /etc/environment"
+        echo "Vous pouvez mettre la valeur que vous désirez en secondes."
+  elif (test $Timeout -gt 1000)
+    then
+        echo "${red}Le timeout de votre session est supérieur à 1000 secondes. Vous devriez le réduire.${normal}"
+        echo "Vous pouvez le définir avec cette commande: echo TMOUT=120 >> /etc/environment"
+        echo "Vous pouvez mettre la valeur que vous désirez en secondes."
+  else
+        echo "${green}Le timeout de votre session est de $Timeout secondes, c'est une valeur correcte.${normal}"
+  fi
+
 echo "----------------------------------------------------------------------------------------"
 echo -e "\n${purple}#R30 Applications utilisant PAM${blue} Non évaluée${normal}"
 echo "----------------------------------------------------------------------------------------"
@@ -1126,13 +1160,15 @@ echo -e "\n${purple}#R36 Droits d’accès aux fichiers de contenu sensible${nor
 echo "Les ﬁchiers à contenu sensible ne doivent être lisibles que par les utilisateurs ayant le strict besoin d’en connaître."
 echo "Quand ces ﬁchiers contiennent des mots de passe (ou des empreintes de mots de passe) ils ne doivent être lisibles que par root."
 echo "En revanche, les ﬁchiers publics qui contiennent la liste des utilisateurs sont lisibles par tout le monde, mais sont éditables uniquement par root."
-echo "La liste des fichiers qui ne devrait être en lecture uniquement pour root a été écrit dans le rapport avec les droits actuels."
+echo "La liste des fichiers qui ne devrait être en lecture uniquement pour root a été écrit dans l'annexe avec les droits actuels."
 Ecrire_Entete "#R36 Droits d’accès aux fichiers de contenu sensible"
-Ecrire_Rapport "Liste des fichiers qui ne devrait être en lecture uniquement pour root:"
-ls -l /etc/gshadow >> $Nom_Rapport
-ls -l /etc/shadow >> $Nom_Rapport
+Ecrire_Annexe "Liste des fichiers qui ne devrait être en lecture uniquement pour root:"
+ls -l /etc/gshadow >> $Nom_Annexe
+ls -l /etc/shadow >> $Nom_Annexe
 Ecrire_Separation
 
+#R37 Exécutables avec bits setuid et setgid
+#R38 Exécutables setuid root
 echo "----------------------------------------------------------------------------------------"
 echo -e "\n${purple}#R37 Exécutables avec bits setuid et setgid${normal}"
 echo "Seuls les programmes spéciﬁquement conçus pour être utilisés avec les bits setuid (ou setgid) peuvent avoir ces bits de privilèges positionnés."
@@ -1140,97 +1176,97 @@ echo -e "\n${purple}#R38 Exécutables setuid root${normal}"
 echo "Les exécutables setuid doivent être le moins nombreux possible."
 echo "Lorsqu’il est attendu que seuls les administrateurs de la machine les exécutent, il faut leur retirer"
 echo "le bit set-uid et leur préférer des commandes comme su ou sudo, qui peuvent être surveillées."
-echo "La liste des fichiers setuid/setgid présents sur le système a été écrite dans le rapport."
+echo -e "\nLa liste des fichiers setuid/setgid présents sur le système a été écrite dans l'annexe."
 Ecrire_Entete "#R37 Exécutables avec bits setuid et setgid / #R38 Exécutables setuid root"
-Ecrire_Rapport "Voici une liste non exhaustive de ﬁchiers setuid root pouvant être rencontrés."
-Ecrire_Rapport "Tout exécutable non mentionné dans cette liste devrait être examiné avec une attention particulière."
-Ecrire_Rapport ""
+Ecrire_Annexe "Voici une liste non exhaustive de ﬁchiers setuid root pouvant être rencontrés."
+Ecrire_Annexe "Tout exécutable non mentionné dans cette liste devrait être examiné avec une attention particulière."
+Ecrire_Annexe ""
 Ecrire_ligneTableauR38
-Ecrire_Rapport "#  \t\tExécutable\t\t\t | \t\tCommentaire\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "#  \t\tExécutable\t\t\t | \t\tCommentaire\t\t\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /bin/mount\t\t\t\t\t | À désactiver, sauf si absolument nécessaire pour les utilisateurs.\t\t\t\t\t\t #"
+Ecrire_Annexe "# /bin/mount\t\t\t\t\t | À désactiver, sauf si absolument nécessaire pour les utilisateurs.\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /bin/netreport\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /bin/netreport\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /bin/ping6\t\t\t\t\t | (IPv6) Idem ping.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /bin/ping6\t\t\t\t\t | (IPv6) Idem ping.\t\t\t\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /bin/ping\t\t\t\t\t | (IPv4) Retirer droit setuid, sauf si un programme le requiert pour du monitoring.\t\t\t\t #"
+Ecrire_Annexe "# /bin/ping\t\t\t\t\t | (IPv4) Retirer droit setuid, sauf si un programme le requiert pour du monitoring.\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /bin/su\t\t\t\t\t | Changement d’utilisateur. Ne pas désactiver.\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /bin/su\t\t\t\t\t | Changement d’utilisateur. Ne pas désactiver.\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /bin/umount\t\t\t\t\t | À désactiver, sauf si absolument nécessaire pour les utilisateurs.\t\t\t\t\t\t #"
+Ecrire_Annexe "# /bin/umount\t\t\t\t\t | À désactiver, sauf si absolument nécessaire pour les utilisateurs.\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /sbin/mount.nfs4\t\t\t\t | À désactiver si NFSv4 est inutilisé.\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /sbin/mount.nfs4\t\t\t\t | À désactiver si NFSv4 est inutilisé.\t\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /sbin/mount.nfs\t\t\t\t | À désactiver si NFSv2/3 est inutilisé.\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /sbin/mount.nfs\t\t\t\t | À désactiver si NFSv2/3 est inutilisé.\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /sbin/umount.nfs4\t\t\t\t | À désactiver si NFSv4 est inutilisé.\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /sbin/umount.nfs4\t\t\t\t | À désactiver si NFSv4 est inutilisé.\t\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /sbin/umount.nfs\t\t\t\t | À désactiver si NFSv2/3 est inutilisé.\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /sbin/umount.nfs\t\t\t\t | À désactiver si NFSv2/3 est inutilisé.\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /sbin/unix_chkpwd\t\t\t\t | Permet de vériﬁer le mot de passe utilisateur pour des programmes non root. À désactiver si inutilisé.\t #"
+Ecrire_Annexe "# /sbin/unix_chkpwd\t\t\t\t | Permet de vériﬁer le mot de passe utilisateur pour des programmes non root. À désactiver si inutilisé.\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/at\t\t\t\t\t | À désactiver si atd n’est pas utilisé.\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/at\t\t\t\t\t | À désactiver si atd n’est pas utilisé.\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/chage\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/chage\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/chfn\t\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/chfn\t\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/chsh\t\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/chsh\t\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/crontab\t\t\t\t | À désactiver si cron n’est pas requis.\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/crontab\t\t\t\t | À désactiver si cron n’est pas requis.\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/fusermount\t\t\t\t | À désactiver sauf si des utilisateurs doivent monter des partitions FUSE.\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/fusermount\t\t\t\t | À désactiver sauf si des utilisateurs doivent monter des partitions FUSE.\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/gpasswd\t\t\t\t | À désactiver si pas d’authentiﬁcation de groupe.\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/gpasswd\t\t\t\t | À désactiver si pas d’authentiﬁcation de groupe.\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/locate\t\t\t\t | À désactiver. Remplacer par mlocate et slocate.\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/locate\t\t\t\t | À désactiver. Remplacer par mlocate et slocate.\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/mail\t\t\t\t\t | À désactiver. Utiliser un mailer local comme ssmtp.\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/mail\t\t\t\t\t | À désactiver. Utiliser un mailer local comme ssmtp.\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/newgrp\t\t\t\t | À désactiver si pas d’authentiﬁcation de groupe.\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/newgrp\t\t\t\t | À désactiver si pas d’authentiﬁcation de groupe.\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/passwd\t\t\t\t | À désactiver, sauf si des utilisateurs non root doivent pouvoir changer leur mot de passe.\t\t\t #"
+Ecrire_Annexe "# /usr/bin/passwd\t\t\t\t | À désactiver, sauf si des utilisateurs non root doivent pouvoir changer leur mot de passe.\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/pkexec\t\t\t\t | À désactiver si PolicyKit n’est pas utilisé.\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/pkexec\t\t\t\t | À désactiver si PolicyKit n’est pas utilisé.\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/procmail\t\t\t\t | À désactiver sauf si procmail est requis.\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/procmail\t\t\t\t | À désactiver sauf si procmail est requis.\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/rcp\t\t\t\t\t | Obsolète. À désactiver.\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/rcp\t\t\t\t\t | Obsolète. À désactiver.\t\t\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/rlogin\t\t\t\t | Obsolète. À désactiver.\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/rlogin\t\t\t\t | Obsolète. À désactiver.\t\t\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/rsh\t\t\t\t\t | Obsolète. À désactiver.\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/rsh\t\t\t\t\t | Obsolète. À désactiver.\t\t\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/screen\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/screen\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/sudo\t\t\t\t\t | Changement d’utilisateur. Ne pas désactiver.\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/sudo\t\t\t\t\t | Changement d’utilisateur. Ne pas désactiver.\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/sudoedit\t\t\t\t | Idem sudo.\t\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/sudoedit\t\t\t\t | Idem sudo.\t\t\t\t\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/wall\t\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/wall\t\t\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/bin/X\t\t\t\t\t | À désactiver sauf si le serveur X est requis.\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/bin/X\t\t\t\t\t | À désactiver sauf si le serveur X est requis.\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/lib/dbus-1.0/dbus-daemon-launch-helper\t | À désactiver quand D-BUS n’est pas utilisé.\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/lib/dbus-1.0/dbus-daemon-launch-helper\t | À désactiver quand D-BUS n’est pas utilisé.\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/lib/openssh/ssh-keysign\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/lib/openssh/ssh-keysign\t\t\t | À désactiver.\t\t\t\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/lib/pt_chown\t\t\t\t | À désactiver (permet de changer le propriétaire des PTY avant l’existence de devfs).\t\t\t\t #"
+Ecrire_Annexe "# /usr/lib/pt_chown\t\t\t\t | À désactiver (permet de changer le propriétaire des PTY avant l’existence de devfs).\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/libexec/utempter/utempter\t\t | À désactiver si le proﬁl utempter SELinux n’est pas utilisé.\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/libexec/utempter/utempter\t\t | À désactiver si le proﬁl utempter SELinux n’est pas utilisé.\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/sbin/exim4\t\t\t\t | À désactiver si Exim n’est pas utilisé.\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/sbin/exim4\t\t\t\t | À désactiver si Exim n’est pas utilisé.\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/sbin/suexec\t\t\t\t | À désactiver si le suexec Apache n’est pas utilisé.\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/sbin/suexec\t\t\t\t | À désactiver si le suexec Apache n’est pas utilisé.\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/sbin/traceroute\t\t\t\t | (IPv4) Idem ping.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/sbin/traceroute\t\t\t\t | (IPv4) Idem ping.\t\t\t\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport "# /usr/sbin/traceroute6\t\t\t\t | (IPv6) Idem ping.\t\t\t\t\t\t\t\t\t\t\t\t #"
+Ecrire_Annexe "# /usr/sbin/traceroute6\t\t\t\t | (IPv6) Idem ping.\t\t\t\t\t\t\t\t\t\t\t\t #"
 Ecrire_ligneTableauR38
-Ecrire_Rapport ""
-Ecrire_Rapport "Liste des fichiers setuid/setgid présents sur le système"
-find / -type f -perm /6000 -ls 2>/dev/null >> $Nom_Rapport
+Ecrire_Annexe ""
+Ecrire_Annexe "Liste des fichiers setuid/setgid présents sur le système"
+find / -type f -perm /6000 -ls 2>/dev/null >> $Nom_Annexe
 Ecrire_Separation
 echo "Retirer les droits setuid ou setgid se fait au travers de la commande chmod :"
 echo "chmod u-s <fichier > (Retire le bit setuid)"
@@ -1246,12 +1282,12 @@ nb=$(find / -type d -perm -0002 -a \! -uid 0 -ls 2>/dev/null | grep "" -c)
 if [ $nb -ne 0 ]
 then 
 	echo "${red}Des répertoires sont accessibles en écriture par tous.${normal}"
-        echo "La liste des $nb répertoires concernés a été écrite dans le rapport."
+        echo "La liste des $nb répertoires concernés a été écrite dans l'annexe."
         echo "root devrait être le propriétaire de ces répertoires."
         echo "Tous les répertoires accessibles en écriture par tous doivent avoir le sticky bit armé."
 
         Ecrire_Entete "#R40 - Liste répertoires accessibles en écriture par tous"
-        find / -type d -perm -0002 -a \! -uid 0 -ls 2>/dev/null  >> $Nom_Rapport
+        find / -type d -perm -0002 -a \! -uid 0 -ls 2>/dev/null  >> $Nom_Annexe
         Ecrire_Separation
 else
         echo "${green}Il n'y a pas de répertoire accessible en écriture par tous${normal}"
@@ -1261,12 +1297,12 @@ nb=$(find / -type f -perm -0002 -ls 2>/dev/null | grep "" -c)
 if [ $nb -ne 0 ]
 then 
 	echo "${red}Aucun ﬁchier régulier ne nécessite d’être modiﬁable par tous.${normal}"
-        echo "La liste des $nb fichiers concernés a a été écrite dans le rapport."
+        echo "La liste des $nb fichiers concernés a a été écrite dans l'annexe."
         echo "Quand un ﬁchier doit être modiﬁable par plusieurs utilisateurs ou programmes en même temps,"
         echo "un groupe doit être créé et seul ce groupe devra avoir des droits d’écriture sur ledit ﬁchier."
 
         Ecrire_Entete "#R40 - Liste fichiers modifiables par tous"
-        find / -type f -perm -0002 -ls 2>/dev/null >> $Nom_Rapport
+        find / -type f -perm -0002 -ls 2>/dev/null >> $Nom_Annexe
         Ecrire_Separation
 
 else
@@ -1433,7 +1469,7 @@ do
       4) fonct_fw exit ;;
       5) fonct_disq exit ;;
       6) fonct_sshd exit ;;
-      7) fonct_anssi > $Nom_Fichier exit ;;
+      7) fonct_anssi > $Nom_Rapport exit ;;
       8) fonct_fail exit ;;
       9) fonct_rap exit ;;
       10) echo "Fin"
