@@ -1,14 +1,11 @@
-
 ####################################################################################################################
 # L'objectif de ce script est de vous aider à vérifier les recommandations de l'ANSSI sur votre systèmes GNU/linux #
 ####################################################################################################################
 # Dev (un peu...)
 
-
 ####################################################################################################################
 # Obj : Ajout de la couleur pour les résultats                                                                     #
 ####################################################################################################################
-
 #normal=$(tput sgr0)                      # normal text
 normal=$'\e[0m'                           # (works better sometimes)
 bold=$(tput bold)                         # make colors bold/bright
@@ -29,7 +26,6 @@ white="$bold$gray"                        # bright white text
 ####################################################################################################################
 # Obj : On fixe le nom du rapport et de l'annexe pour la vérification des critères de l'ANSSI                      #
 ####################################################################################################################
-
 Nom_Rapport="Rapport_"$(date '+%d-%m-%y-%H%M')
 Nom_Annexe="Annexe_"$(date '+%d-%m-%y-%H%M')
 
@@ -47,7 +43,8 @@ fi
 ####################################################################################################################
 # Obj : vérifier que le script est executé par bash                                                                #
 ####################################################################################################################
-if readlink /proc/$$/exe | grep -qs "dash"; then
+if readlink /proc/$$/exe | grep -qs "dash";
+ then
         echo "Utilisez bash, pas sh..."
         exit 1
 fi
@@ -62,30 +59,26 @@ res_ver=$(uname -a| cut -d" " -f3)
 
 echo -e "\rHostname : $res_nom \r"
 
-
-
 if [ -f /etc/redhat-release ]
-then
+ then
 	nb=$(grep -c "CentOS" /etc/redhat-release)
 	if [ $nb -eq 1 ]
-		then 
-			cat /etc/redhat-release
-		fi
+	 then cat /etc/redhat-release
+	fi
 fi
 
 date
 echo -e "version $res_ver \n"
 }
 
-
 fonct_disq () {
-
 clear
 echo -e "\n####################################################################################################################"
 echo "# Obj : utilisation de l'espace disque                                                                             #"
 echo "####################################################################################################################"
 echo -e "\nUtilisation de l'espace disque :\n"
 df -h
+
 ####################################################################################################################
 #Obj : récupération des numéros de série des disques                                                               #
 ####################################################################################################################
@@ -99,10 +92,8 @@ echo "# Obj : informations réseau du serveur                                   
 echo "####################################################################################################################"
 echo -e "\nAdressage IP du serveur :"
 ip a |grep -e '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'
-
 echo -e "\nRoute disponible :"
 route -n
-
 }
 
 fonct_ecoute () {
@@ -114,14 +105,14 @@ netstat -teaoplon
 
 echo -e "\n"
 nb=$(netstat -ntaup | grep LISTEN | grep -c tcp6)
-echo -e "Vous avez ${red}$nb${normal} ports ouverts en tcp sur ipv6"
+echo "Vous avez ${red}$nb${normal} ports ouverts en tcp sur ipv6"
 nb=$(netstat -ntaup | grep -c udp6)
-echo -e "Vous avez ${red}$nb${normal} ports ouverts en udp sur ipv6"
+echo "Vous avez ${red}$nb${normal} ports ouverts en udp sur ipv6"
 
 nb=$(netstat -ntaup | grep LISTEN | grep -c tcp)
-echo -e "Vous avez ${red}$nb${normal} ports ouverts en en tcp sur ipv4"
+echo "Vous avez ${red}$nb${normal} ports ouverts en en tcp sur ipv4"
 nb=$(netstat -ntaup | grep -c udp)
-echo -e "Vous avez ${red}$nb${normal} ports ouverts en en udp sur ipv4"
+echo "Vous avez ${red}$nb${normal} ports ouverts en en udp sur ipv4"
 
 echo -e "\n####################################################################################################################"
 echo "# Obj : quelques services classiques sur un serveur installé par défaut                                            #"
@@ -174,120 +165,108 @@ echo "##########################################################################
 echo -e "\nEvaluation non-exhaustive de la configuration du serveur ssh (/etc/ssh/sshd_config) : \n"
 
 if grep -q "Protocol 2" /etc/ssh/sshd_config 
-     then
-echo -e "Limiter au Protocol 2 : \t\t\t\t${green}ok${normal}";
-    else
-echo -e "Limiter au Protocol 2 : \t\t\t\t${red}ko${normal}";
+ then
+        echo -e "Limiter au Protocol 2 : \t\t\t\t${green}ok${normal}";
+ else
+        echo -e "Limiter au Protocol 2 : \t\t\t\t${red}ko${normal}";
 fi
-
 
 if grep -q "StrictHostKeyChecking  ask" /etc/ssh/ssh_config 
-     then
-echo -e "Validation explicite par l’utilisateur de la clé hôte : ${green}ok${normal}";
-    else
-echo -e "Validation explicite par l’utilisateur de la clé hôte : ${red}ko${normal} (à modifier si le poste contrôlé est client)";
+ then
+        echo "Validation explicite par l’utilisateur de la clé hôte : ${green}ok${normal}";
+ else
+        echo "Validation explicite par l’utilisateur de la clé hôte : ${red}ko${normal} (à modifier si le poste contrôlé est client)";
 fi
-
 
 if grep -q "StrictModes yes" /etc/ssh/sshd_config
-     then
-echo -e "Rectitude des modes et droits : \t\t\t${green}ok${normal} ";
-    else
-echo -e "Rectitude des modes et droits : \t\t\t${red}ko${normal}";
+ then
+        echo -e "Rectitude des modes et droits : \t\t\t${green}ok${normal} ";
+ else
+        echo -e "Rectitude des modes et droits : \t\t\t${red}ko${normal}";
 fi
-
-
 
 if grep -q "UsePrivilegeSeparation yes" /etc/ssh/sshd_config
-     then
-echo -e "Séparation des privilèges  : \t\t\t\t${green}ok${normal}";
-    else
-echo -e "Séparation de privilèges  : \t\t\t\t${red}ko${normal}";
+ then
+        echo -e "Séparation des privilèges  : \t\t\t\t${green}ok${normal}";
+ else
+        echo -e "Séparation de privilèges  : \t\t\t\t${red}ko${normal}";
 fi
-
 
 if grep -q "PermitEmptyPasswords no" /etc/ssh/sshd_config
-     then
-echo -e "Interdire les mots de passe vide : \t\t\t${green}ok${normal}";
-    else
-echo -e "Interdire les mots de passe vide : \t\t\t${red}ko${normal}";
+ then
+        echo -e "Interdire les mots de passe vide : \t\t\t${green}ok${normal}";
+ else
+        echo -e "Interdire les mots de passe vide : \t\t\t${red}ko${normal}";
 fi
-
 
 if grep -q "MaxAuthTries 2" /etc/ssh/sshd_config
-     then
-echo -e "Nombre de tentative d'authentification : \t\t${green}ok${normal}";
-    else
-echo -e "Nombre de tentative d'authentification : \t\t${red}ko${normal}";
+ then
+        echo -e "Nombre de tentative d'authentification : \t\t${green}ok${normal}";
+ else
+        echo -e "Nombre de tentative d'authentification : \t\t${red}ko${normal}";
 fi
-
 
 if grep -q "LoginGraceTime 30" /etc/ssh/sshd_config
-     then
-echo -e "Limite de la durée d'authentification : \t\t${green}ok${normal}";
-    else
-echo -e "Limite de la durée d'authentification : \t\t${red}ko${normal}";
+ then
+        echo -e "Limite de la durée d'authentification : \t\t${green}ok${normal}";
+ else
+        echo -e "Limite de la durée d'authentification : \t\t${red}ko${normal}";
 fi
-
 
 if grep -q "PermitRootLogin no" /etc/ssh/sshd_config
-     then
-echo -e "Connexion de root interdite : \t\t\t\t${green}ok${normal}";
-    else
-echo -e "Connexion de root interdite : \t\t\t\t${red}ko${normal}";
+ then
+        echo -e "Connexion de root interdite : \t\t\t\t${green}ok${normal}";
+ else
+        echo -e "Connexion de root interdite : \t\t\t\t${red}ko${normal}";
 fi
-
 
 if grep -q "PrintLastLog yes" /etc/ssh/sshd_config
-     then
-echo -e "Affichage de la dernière connexion : \t\t\t${green}ok${normal}";
-    else
-echo -e "Affichage de la dernière connexion : \t\t\t${red}ko${normal}";
+ then
+        echo -e "Affichage de la dernière connexion : \t\t\t${green}ok${normal}";
+ else
+        echo -e "Affichage de la dernière connexion : \t\t\t${red}ko${normal}";
 fi
 
-
 if grep -q "AllowUsers" /etc/ssh/sshd_config
-     then
-echo -e "Limiter les utilisateurs autorisés : \t\t\t${green}ok${normal}";
-    else
-echo -e "Limiter les utilisateurs autorisés : \t\t\t${red}ko${normal}";
+ then
+        echo -e "Limiter les utilisateurs autorisés : \t\t\t${green}ok${normal}";
+ else
+        echo -e "Limiter les utilisateurs autorisés : \t\t\t${red}ko${normal}";
 fi
 
 if grep -q "AllowGroups" /etc/ssh/sshd_config
-     then
-echo -e "Limiter les groupes autorisés : \t\t\t${green}ok${normal}";
-    else
-echo -e "Limiter les groupes autorisés : \t\t\t${red}ko${normal}";
+ then
+        echo -e "Limiter les groupes autorisés : \t\t\t${green}ok${normal}";
+ else
+        echo -e "Limiter les groupes autorisés : \t\t\t${red}ko${normal}";
 fi
 
 if grep -q "PermitUserEnvironment no" /etc/ssh/sshd_config
-     then
-echo -e "Bloquer la modification de l’environnement : \t\t${green}ok${normal}";
-    else
-echo -e "Bloquer la modification de l’environnement : \t\t${red}ko${normal}";
+ then
+        echo -e "Bloquer la modification de l’environnement : \t\t${green}ok${normal}";
+ else
+        echo -e "Bloquer la modification de l’environnement : \t\t${red}ko${normal}";
 fi
 
 if grep -q "\#ListenAddress" /etc/ssh/sshd_config
-     then
-echo -e "Limiter les interfaces : \t\t\t\t${red}ko${normal}";
-    else
-echo -e "Limiter les interfaces : \t\t\t\t${green}ok${normal}";
+ then
+        echo -e "Limiter les interfaces : \t\t\t\t${red}ko${normal}";
+ else
+        echo -e "Limiter les interfaces : \t\t\t\t${green}ok${normal}";
 fi
-
 
 if grep -q "AllowTcpForwarding no" /etc/ssh/sshd_config
-     then
-echo -e "Désactiver les redirections côté serveur : \t\t${green}ok${normal}";
-    else
-echo -e "Désactiver les redirections côté serveur : \t\t${red}ko${normal}";
+ then
+        echo -e "Désactiver les redirections côté serveur : \t\t${green}ok${normal}";
+ else
+        echo -e "Désactiver les redirections côté serveur : \t\t${red}ko${normal}";
 fi
 
-
 if grep -q "X11Forwarding no" /etc/ssh/sshd_config
-     then
-echo -e "Désactivation de la redirection X11 : \t\t\t${green}ok${normal}";
-    else
-echo -e "Désactivation de la redirection X11 : \t\t\t${red}ko${normal}";
+ then
+        echo -e "Désactivation de la redirection X11 : \t\t\t${green}ok${normal}";
+ else
+        echo -e "Désactivation de la redirection X11 : \t\t\t${red}ko${normal}";
 fi
 }
 
@@ -328,7 +307,6 @@ function Ecrire_ligneTableauR38()
   Ecrire_Annexe "#----------------------------------------------------------------------------------------------------------------------------------------------------------------#"
 }
 
-
 ####################################################################################################################
 #Obj : Recommandations ANSSI                                                                                       #
 ####################################################################################################################
@@ -342,46 +320,44 @@ echo "Recommandations issues du Guide ANSSI-BP-028 du 22 février 2019"
 
 echo "----------------------------------------------------------------------------------------------------------"
 #R1 Minimisation des services installés
-echo -e "\n${purple}#R1 Liste des services installés sur le serveur${normal}"
-echo -e "La liste des services installés a été écrite dans l'annexe."
-        Ecrire_Entete "#R1 - Liste des services installés sur le serveur"
+echo -e "\n${purple}#R1 Minimisation des services installés${normal}"
+echo "La liste des services installés a été écrite dans l'annexe."
+        Ecrire_Entete "#R1 - Minimisation des services installés"
+        Ecrire_Annexe "Liste des services installés :"
         service --status-all >> $Nom_Annexe
         Ecrire_Separation
 
 echo "----------------------------------------------------------------------------------------"
 #R2 Minimisation de la configuration
 echo -e "\n${purple}#R2 Minimisation de la configuration : ${blue}évaluée partiellement${normal}"
-echo -e "Les fonctionnalités configurées au niveau des services démarrés doivent être limitées au
-strict nécessaire."
+echo "Les fonctionnalités configurées au niveau des services démarrés doivent être limitées au strict nécessaire."
 nb=$(ss -ltupn | grep -c exim)
 if [ $nb -ne 0 ]
-then 
+ then 
 	echo "${red}Exim4 ne devrait pas être installé${normal}"
         echo "Pour le désinstaller : apt-get --purge remove exim4 exim4-base exim4-config exim4-daemon-heavy"
-else
+ else
         echo "${green}Exim4 n'est pas installé${normal}"
 fi
 
 echo "----------------------------------------------------------------------------------------"
 #R3 Principe de moindre privilège
 echo -e "\n${purple}#R3 Principe de moindre privilège :${blue} Non évaluée${normal}"
-echo -e "Les services et exécutables disponibles sur le système doivent faire l’objet d’une analyse
+echo "Les services et exécutables disponibles sur le système doivent faire l’objet d’une analyse
 afin de connaître les privilèges qui leurs sont associés, et doivent ensuite être configurés
 et intégrés en vue d’en utiliser le strict nécessaire."
 
 echo "----------------------------------------------------------------------------------------"
 #R4 Utilisation des fonctionnalités de contrôle d’accès
-
 echo -e "\n${purple}#R4 Utilisation des fonctionnalités de contrôle d'accès :${blue} Non évaluée${normal}"
-echo -e "Utilisation des fonctionnalités de contrôle d’accès. Il est recommandé d’utiliser les 
+echo "Utilisation des fonctionnalités de contrôle d’accès. Il est recommandé d’utiliser les 
 fonctionnalités de contrôle d’accès obligatoire (MAC) en plus du traditionnel modèle utilisateur
  Unix (DAC), voire éventuellement de les combiner avec des mécanismes de cloisonnement."
 
 echo "----------------------------------------------------------------------------------------"
 #R5 Principe de défense en profondeur
-
 echo -e "\n${purple}#R5 Principe de défense en profondeur :${blue} Non évaluée${normal}"
-echo -e "Sous Unix et dérivés, la défense en profondeur doit reposer sur une combinaison de
+echo "Sous Unix et dérivés, la défense en profondeur doit reposer sur une combinaison de
 barrières qu’il faut garder indépendantes les unes des autres. Par exemple :
 – authentification nécessaire avant d’effectuer des opérations, notamment quand elles
 sont privilégiées ;
@@ -390,18 +366,17 @@ sont privilégiées ;
 de séparation de privilèges ;
 – utilisation de mécanismes de prévention d’exploitation."
 
-
 echo "----------------------------------------------------------------------------------------"
 #R6 Cloisonnement des services réseau
 echo -e "\n${purple}#R6 Cloisonnement des services réseau :${blue} Non évaluée${normal}"
-echo -e "Les services réseau doivent autant que possible être hébergés sur des environnements
+echo "Les services réseau doivent autant que possible être hébergés sur des environnements
 distincts. Cela évite d’avoir d’autres services potentiellement affectés si l’un d’eux se
 retrouve compromis sous le même environnement."
 
 echo "----------------------------------------------------------------------------------------"
 #R7 Journalisation de l’activité des services
 echo -e "\n${purple}#R7 Journalisation de l’activité des services${blue} Non évaluée${normal}"
-echo -e "Les activités du système et des services en cours d’exécution doivent être journalisées et
+echo "Les activités du système et des services en cours d’exécution doivent être journalisées et
 archivées sur un système externe, non local."
 
 echo "----------------------------------------------------------------------------------------"
@@ -409,23 +384,21 @@ echo "--------------------------------------------------------------------------
 nb=$(uname -a |grep -c "Debian")
 echo -e "\n${purple}#R8 Mises à jour régulières${normal}"
 if [ $nb -eq 1 ]
-then 
+ then 
         echo -e "Une simulation de mise à jour a été écrite dans l'annexe."
         Ecrire_Entete "#R8 - Simulation de mise à jour (apt-get)"
         apt-get update && apt-get upgrade -s >> $Nom_Annexe
         Ecrire_Separation
 fi
-
 if [ -f /etc/redhat-release ]
-then 
+ then 
 	nb=$(grep -c "CentOS" /etc/redhat-release)
 	if [ $nb -eq 1 ]
-	then 
+	 then 
                 echo -e "Une simulation de mise à jour a été écrite dans l'annexe."
                 Ecrire_Entete "#R8 - Simulation de mise à jour (yum)"
                 yum check-update >> $Nom_Annexe
                 Ecrire_Separation
-		
 	fi
 fi
 
@@ -443,8 +416,7 @@ nb=$(arch | grep -c x86_64)
 if [ $nb -ne 1 ]
  then   
         echo -e "${red}Vous devez privilégier une installation 64bits de votre système${normal}"
-else 
-
+ else 
         echo -e "${green}Vous avez privilégié une installation 64bits de votre système${normal}"
 fi
 
@@ -508,12 +480,11 @@ echo "--------------------------------------------------------------------------
 echo -e "\n${purple}#R13 Restrictions d’accès sur le dossier boot${normal}"
 nb=$(mount | grep -v boot/ | grep -c boot)
 if [ $nb -ne 0 ]
-then 
+ then 
 	echo "${red}La partition /boot ne devrait pas être accessible${normal}"
-else
+ else
         echo "${green}le dossier boot n'est pas accessible${normal}"
 fi
-
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "\n${purple}#R14 Installation de paquets réduite au strict nécessaire${blue} Non évaluée${normal}"
@@ -526,7 +497,6 @@ echo "Les dépôts utilisés ont été écrit dans l'annexe."
 Ecrire_Entete "#R15 - Liste des dépôts utilisés"
 cat /etc/apt/sources.list >> $Nom_Annexe
 Ecrire_Separation
-
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "\n${purple}#R16 Dépôts de paquets durcis${blue} Non évaluée${normal}"
@@ -551,7 +521,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Le routage est actif entre vos interfaces, est-ce normal ?${normal}"
 	echo "Pour mise en place : sysctl -w net.ipv4.ip_forward=0"
-else
+ else
         echo "${green}Le routage est désactivé entre vos interfaces${normal}"
 fi
 
@@ -563,7 +533,7 @@ if [ $val = $a ]
  then
         echo "${red}Le routage des paquets étrangers est activé${normal}"
 	echo "Pour mise en place : sysctl -w net.ipv4.conf.all.rp_filter=1"
-else
+ else
         echo "${green}Le routage des paquets étrangers est désactivé${normal}"
 fi
 
@@ -575,7 +545,7 @@ if [ $val = $a ]
  then
         echo "${red}Le routage des paquets étrangers est activé${normal}"
 	echo "Pour mise en place : sysctl -w net.ipv4.conf.default.rp_filter=1"
-else
+ else
         echo "${green}Le routage des paquets étrangers est désactivé${normal}"
 fi
 
@@ -587,7 +557,7 @@ if [ $val = $a ]
  then
         echo -e "${red}La redirection ICMP est activée${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.all.send_redirects=0"
-else
+ else
         echo -e "${green}La redirection ICMP est déactivée${normal}"
 fi
 
@@ -599,7 +569,7 @@ if [ $val = $a ]
  then
         echo -e "${red}La redirection ICMP est activée${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.default.send_redirects=0"
-else
+ else
         echo -e "${green}La redirection ICMP est déactivée${normal}"
 fi
 
@@ -611,7 +581,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Le source  routing est activé${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.all.accept_source_route=0"
-else
+ else
         echo -e "${green}Le source  routing est déactivé${normal}"
 fi
 
@@ -623,7 +593,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Le source  routing est activé${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.default.accept_source_route=0"
-else
+ else
         echo -e "${green}Le source  routing est déactivé${normal}"
 fi
 
@@ -635,7 +605,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Le serveur accepte les flux de type ICMP redirect${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.all.accept_redirects=0"
-else
+ else
         echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
 
@@ -647,7 +617,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Le serveur accepte les flux de type ICMP redirect${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.all.secure_redirects=0"
-else
+ else
         echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
 
@@ -659,7 +629,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Le serveur accepte les flux de type ICMP redirect${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.default.accept_redirects=0"
-else
+ else
         echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
 
@@ -671,7 +641,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Le serveur accepte les flux de type ICMP redirect${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv4.conf.default.secure_redirects=0"
-else
+ else
         echo -e "${green}Le serveur n'accepte pas les flux de type ICMP redirect${normal}"
 fi
 
@@ -682,7 +652,7 @@ val=$(sysctl net.ipv4.conf.all.log_martians | tail -c2)
 if [ $val = $a ]
  then
         echo "${green}les paquets sont loggés${normal}"
-else
+ else
         echo "${red}les paquets  ne sont pas loggés${normal}"
 	echo "Pour mise en place : sysctl -w net.ipv4.conf.all.log_martians=1"
 fi
@@ -695,7 +665,7 @@ val=$(sysctl net.ipv4.tcp_rfc1337 | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${green}Problème tcp traité${normal}"
-else
+ else
         echo -e "${red}Problème tcp non-traité${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv4.tcp_rfc1337=1"
 fi
@@ -708,7 +678,7 @@ val=$(sysctl net.ipv4.icmp_ignore_bogus_error_responses | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${green}Réponses ignorées${normal}"
-else
+ else
         echo -e "${red}Réponses ICMP traitées${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1"
 fi
@@ -718,9 +688,9 @@ echo -e "\nAugmenter  la plage  pour  les  ports éphémères"
 a=$(sysctl net.ipv4.ip_local_port_range |cut -f 2)
 b=65535
 if [ "$a" -ne "$b" ]
-then
+ then
         echo -e "${red}La plage de ports éphèmères est à augmenter${normal}"
-else
+ else
         echo -e "${green}La plage de ports éphèmères est conforme${normal}"
 fi
 echo -e "si besoin : sysctl -w net.ipv4.ip_local_port_range=\"32768 65535\""
@@ -732,7 +702,7 @@ val=$(sysctl net.ipv4.tcp_syncookies | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${green}SYN cookies utilisés${normal}"
-else
+ else
         echo -e "${red}SYN cookies ignorés${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv4.tcp_syncookies=1"
 fi
@@ -744,7 +714,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Le support est activé${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.router_solicitations=0"
-else
+ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
@@ -755,7 +725,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Le support est activé${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.router_solicitations=0"
-else
+ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
@@ -766,7 +736,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Le support est activé ${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_ra_rtr_pref=0"
-else
+ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
@@ -777,7 +747,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Le support est activé ${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_ra_rtr_pref=0"
-else
+ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
@@ -788,7 +758,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Le support est activé ${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_ra_pinfo=0"
-else
+ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
@@ -799,7 +769,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Le support est activé ${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_ra_pinfo=0"
-else
+ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
@@ -810,7 +780,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Le support est activé ${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_ra_defrtr=0"
-else
+ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
@@ -821,7 +791,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Le support est activé ${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_ra_defrtr=0"
-else
+ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
@@ -832,7 +802,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Le support est activé ${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.autoconf=0"
-else
+ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
@@ -843,7 +813,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Le support est activé ${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.autoconf=0"
-else
+ else
         echo -e "${green}Le support est désactivé${normal}"
 fi
 
@@ -854,7 +824,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Les ICMP redirect sont acceptées${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_redirects=0"
-else
+ else
         echo -e "${green}Les ICMP redirect sont refusées${normal}"
 fi
 
@@ -865,7 +835,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Les ICMP redirect sont acceptées${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_redirects=0"
-else
+ else
         echo -e "${green}Les ICMP redirect sont refusées${normal}"
 fi
 
@@ -876,7 +846,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Les packets de source routing sont acceptés${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.accept_source_route=0"
-else
+ else
         echo -e "${green}Les packets de source routing sont refusés${normal}"
 fi
 
@@ -887,7 +857,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Les packets de source routing sont acceptés${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.accept_source_route=0"
-else
+ else
         echo -e "${green}Les packets de source routing sont refusés${normal}"
 fi
 
@@ -898,7 +868,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Les packets de source routing sont acceptés${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.all.max_addresses=1"
-else
+ else
         echo -e "${green}Les packets de source routing sont refusés${normal}"
 fi
 
@@ -909,7 +879,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Les packets de source routing sont acceptés${normal}"
 	echo -e "Pour mise en place : sysctl -w net.ipv6.conf.default.max_addresses=1"
-else
+ else
         echo -e "${green}Les packets de source routing sont refusés${normal}"
 fi
 
@@ -923,7 +893,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Les requètes systèmes sont activées${normal}"
 	echo -e "Pour mise en place : sysctl -w kernel.sysrq=0"
-else
+ else
         echo -e "${green}Les requètes systèmes sont activées${normal}"
 fi
 
@@ -935,7 +905,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Les core dump sont possibles${normal}"
 	echo -e "Pour mise en place : sysctl -w fs.suid_dumpable=0"
-else
+ else
         echo -e "${green}Les core dump sont désactivés${normal}"
 fi
 
@@ -946,7 +916,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Les déréférencements sont possibles${normal}"
 	echo -e "Pour mise en place : sysctl -w fs.protected_symlinks=1"
-else
+ else
         echo -e "${green}Le déréférencement des liens symboliques est désactivé${normal}"
 fi
 
@@ -957,7 +927,7 @@ if [ $val = $a ]
  then
         echo -e "${red}Les déréférencements sont possibles${normal}"
 	echo -e "Pour mise en place : sysctl -w fs.protected_hardlinks=1"
-else
+ else
         echo -e "${green}Le déréférencement des liens symboliques est désactivé${normal}"
 fi
 
@@ -979,7 +949,7 @@ if [ "$a" -ne "$b" ]
 then
         echo -e "${red}Il est possible de mapper la mémoire dans les adresses basses${normal}"
 	echo -e "Pour mise en place : sysctl -w vm.mmap_min_addr=65536"
-else
+ else
         echo -e "${green}La plage de mémoire adressable est conforme${normal}"
 fi
 
@@ -988,10 +958,10 @@ echo -e "\nEspace  de choix  plus  grand  pour  les  valeurs  de PID"
 a=$(sysctl kernel.pid_max |cut -d" " -f 3)
 b=65536
 if [ "$a" -ne "$b" ]
-then
+ then
         echo -e "${red}Il'espace de choix pour les valeurs de PID doit être augementé${normal}"
 	echo -e "Pour mise en place : sysctl -w kernel.pid_max=65536"
-else
+ else
         echo -e "${green}L'espace de chois PID est conforme${normal}"
 fi
 
@@ -1001,7 +971,7 @@ val=$(sysctl kernel.kptr_restrict | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${green}Obfuscation  des  adresses mémoire  kernel activé${normal}"
-else
+ else
         echo -e "${red}Obfuscation  des  adresses mémoire  kernel désactivé${normal}"
 	echo -e "Pour mise en place : sysctl -w kernel.kptr_restrict=1"
 fi
@@ -1012,7 +982,7 @@ val=$(sysctl kernel.dmesg_restrict | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${green}Accès au buffer dmesg restreint${normal}"
-else
+ else
         echo -e "${red}L'accès au buffer dmesg n'est pas restreint${normal}"
 	echo -e "Pour mise en place : sysctl -w kernel.dmesg_restrict=1"
 fi
@@ -1024,7 +994,7 @@ val=$(sysctl kernel.perf_event_paranoid | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${green}Accès au sous systeme perf restreint${normal}"
-else
+ else
         echo -e "${red}L'accès au sous systeme perf n'est pas restreint${normal}"
 	echo -e "Pour mise en place : sysctl -w kernel.perf_event_paranoid=2"
 fi
@@ -1035,7 +1005,7 @@ val=$(sysctl kernel.perf_event_max_sample_rate | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${green}Accès au sous systeme perf max sample rate ${normal}"
-else
+ else
         echo -e "${red}L'accès au sous systeme perf n'est pas restreint${normal}"
 	echo -e "Pour mise en place : sysctl -w kernel.perf_event_max_sample_rate=1"
 fi
@@ -1046,7 +1016,7 @@ val=$(sysctl kernel.perf_cpu_time_max_percent | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${green}Accès au sous systeme perf max sample rate ${normal}"
-else
+ else
         echo -e "${red}L'accès au sous systeme perf n'est pas restreint${normal}"
 	echo -e "Pour mise en place : sysctl -w kernel.perf_cpu_time_max_percent=1"
 fi
@@ -1059,7 +1029,7 @@ val=$(sysctl kernel.modules_disabled | tail -c2)
 if [ $val = $a ]
  then
         echo -e "${green}Le chargement des modules noyau est désactivé${normal}"
-else
+ else
         echo -e "${red}Le chargement des modules noyau est activé${normal}"
 	echo -e "Pour mise en place : sysctl -w kernel.modules_disabled=1"
 	echo -e "Il est conseillé de mettre directement à jour votre fichier /etc/sysctl.conf"
@@ -1076,7 +1046,7 @@ if [ $val = $a ]
 	echo -e "${red}Il est recommandé de charger le module de sécurité Yama lors du démarrage${normal}"
 	echo -e "Vous pouvez par exemple passer l'argument security=yama au noyau"
 	echo -e "et configurer la sysctl kernel.yama.ptrace_scope à une valeur au moins égale à 1"
-else
+ else
 	echo -e "${green}Le module Yama est chargé${normal}"
 fi
 
@@ -1107,23 +1077,23 @@ echo "--------------------------------------------------------------------------
 echo -e "\n${purple}#R29 Délai d’expiration de sessions utilisateurs${normal}"
 Timeout=$(printenv TMOUT)
 if (test ! $Timeout)
-  then
+ then
         echo "${red}Vous n'avez pas défini de timeout pour la session.${normal}"
         echo "Vous pouvez le définir avec cette commande: echo TMOUT=120 >> /etc/environment"
         echo "Vous pouvez mettre la valeur que vous désirez en secondes."
-  elif (test $Timeout -eq 0)
-    then
+ elif (test $Timeout -eq 0)
+  then
         echo "${red}Vous avez désactivé le timeout pour la session, vous devriez le réactiver.${normal}"
         echo "Vous pouvez le définir avec cette commande: echo TMOUT=120 >> /etc/environment"
         echo "Vous pouvez mettre la valeur que vous désirez en secondes."
-  elif (test $Timeout -gt 1000)
-    then
+ elif (test $Timeout -gt 1000)
+  then
         echo "${red}Le timeout de votre session est supérieur à 1000 secondes. Vous devriez le réduire.${normal}"
         echo "Vous pouvez le définir avec cette commande: echo TMOUT=120 >> /etc/environment"
         echo "Vous pouvez mettre la valeur que vous désirez en secondes."
-  else
+ else
         echo "${green}Le timeout de votre session est de $Timeout secondes, c'est une valeur correcte.${normal}"
-  fi
+fi
 
 echo "----------------------------------------------------------------------------------------"
 echo -e "\n${purple}#R30 Applications utilisant PAM${blue} Non évaluée${normal}"
@@ -1144,13 +1114,13 @@ echo -e "\n${purple}#R35 Valeur de umask${normal}"
 User_Umask_recommande=0077
 User_Umask=$(umask)
 if test $User_Umask_recommande != $User_Umask
-then
+ then
       echo "${red}L'umask est $User_Umask.${normal}"
       echo "Le umask système doit être positionné à 0027"
       echo "(par défaut, tout ﬁchier créé n’est lisible que par l’utilisateur et son groupe, et modiﬁable uniquement par son propriétaire)."
       echo "Le umask pour les utilisateurs doit être positionné à 0077"
       echo "(tout ﬁchier créé par un utilisateur n’est lisible et modiﬁable que par lui)."
-else
+ else
       echo  "${green}l'umask est 0077. C'est la valeur recommandée.${normal}"
 fi
 
@@ -1280,19 +1250,17 @@ echo "--------------------------------------------------------------------------
 echo -e "\n${purple}#R40 Sticky bit et droits d’accès en écriture${normal}"
 nb=$(find / -type d -perm -0002 -a \! -uid 0 -ls 2>/dev/null | grep "" -c)
 if [ $nb -ne 0 ]
-then 
+ then 
 	echo "${red}Des répertoires sont accessibles en écriture par tous.${normal}"
         echo "La liste des $nb répertoires concernés a été écrite dans l'annexe."
         echo "root devrait être le propriétaire de ces répertoires."
         echo "Tous les répertoires accessibles en écriture par tous doivent avoir le sticky bit armé."
-
         Ecrire_Entete "#R40 - Liste répertoires accessibles en écriture par tous"
         find / -type d -perm -0002 -a \! -uid 0 -ls 2>/dev/null  >> $Nom_Annexe
         Ecrire_Separation
-else
+ else
         echo "${green}Il n'y a pas de répertoire accessible en écriture par tous${normal}"
 fi
-
 nb=$(find / -type f -perm -0002 -ls 2>/dev/null | grep "" -c)
 if [ $nb -ne 0 ]
 then 
@@ -1300,11 +1268,9 @@ then
         echo "La liste des $nb fichiers concernés a a été écrite dans l'annexe."
         echo "Quand un ﬁchier doit être modiﬁable par plusieurs utilisateurs ou programmes en même temps,"
         echo "un groupe doit être créé et seul ce groupe devra avoir des droits d’écriture sur ledit ﬁchier."
-
         Ecrire_Entete "#R40 - Liste fichiers modifiables par tous"
         find / -type f -perm -0002 -ls 2>/dev/null >> $Nom_Annexe
         Ecrire_Separation
-
 else
         echo "${green}Il n'y a pas de fichier accessible en écriture par tous${normal}"
 fi
@@ -1345,32 +1311,34 @@ echo "--------------------------------------------------------------------------
 echo -e "\n${purple}#R57 Groupe dédié à l’usage de sudo${blue} Non évaluée${normal}"
 echo "----------------------------------------------------------------------------------------"
 
+#R58 Directives de configuration sudo
+#R59 Authentification des utilisateurs exécutant sudo
+#R60 Privilèges des utilisateurs cible pour une commande sudo
+#R61 Limitation du nombre de commandes nécessitant l’option EXEC
 echo -e "\n${purple}#R58 Directives de configuration sudo${blue} Evaluée partiellement${normal}"
-        nb=$(grep -c "noexec" /etc/sudoers)
-        if [ $nb -eq 1 ]
-        then
+nb=$(grep -c "noexec" /etc/sudoers)
+if [ $nb -eq 1 ]
+ then
         echo "${green}L'execution des subsystem est interdite${normal}"
-else
+ else
         echo -e "${red}L'execution des subsystem est autorisé${normal}"
 	echo "Ajouter les lignes suivants à votre sudoers :"
 	echo "         Defaults noexec,requiretty,use_pty,umask=0027"
 	echo "         Defaults ignore_dot,env_reset,passwd_timeout=1"
 fi
-
-echo "----------------------------------------------------------------------------------------"
 echo -e "\n${purple}#R59 Authentification des utilisateurs exécutant sudo"
-echo "#R60 Privilèges des utilisateurs cible pour une commande sudo "
+echo "#R60 Privilèges des utilisateurs cible pour une commande sudo"
 echo "#R61 Limitation du nombre de commandes nécessitant l’option EXEC${normal}"
 echo "Recommandations évaluées dans la #R58"
 
 #R62 Du bon usage de la négation dans une spécification sudo
 echo "----------------------------------------------------------------------------------------"
 echo -e "\n${purple}#R62 Du bon usage de la négation dans une spécification sudo${normal}"
-        nb=$(grep -c "!/" /etc/sudoers)
-        if [ $nb -eq 0 ]
-        then
+nb=$(grep -c "!/" /etc/sudoers)
+if [ $nb -eq 0 ]
+ then
         echo "${green}Pas de négation dans votre fichier sudoers${normal}"
-else
+ else
         echo -e "${red}L'utilisation des négations est déconseillée${normal}"
 	echo "Exemple :"
 	echo "        User ALL=ALL, !/bin/sh"
@@ -1380,15 +1348,16 @@ fi
 #R63 Arguments explicites dans les spécifications sudo
 echo "----------------------------------------------------------------------------------------"
 echo -e "\n${purple}#R63 Arguments explicites dans les spécifications sudo${normal}"
-	#pas de * caractère jocker dans le sudoers
-        nb=$(grep -c "\*" /etc/sudoers)
-        if [ $nb -eq 0 ]
-        then
+#pas de * caractère jocker dans le sudoers
+nb=$(grep -c "\*" /etc/sudoers)
+if [ $nb -eq 0 ]
+ then
         echo "${green}Pas de /* dans votre fichier sudoers${normal}"
-else
+ else
         echo -e "${red}L'utilisation des carat est déconseillée${normal}"
-	echo "Toutes les commandes du fichier sudoers doivent préciser strictement les arguments autorisés à être utilisés pour un utilisateur donné.
-L’usage de ( \* wildcard) dans les règles doit être autant que possible évité. L’absence d’arguments auprès d’une commande doit être spécifiée par la présence d’une chaînevide (\"\")."
+	echo "Toutes les commandes du fichier sudoers doivent préciser strictement les arguments autorisés à être utilisés pour un utilisateur donné."
+        echo "L’usage de ( \* wildcard) dans les règles doit être autant que possible évité."
+        echo "L’absence d’arguments auprès d’une commande doit être spécifiée par la présence d’une chaînevide (\"\")."
 fi
 
 echo "----------------------------------------------------------------------------------------"
@@ -1421,17 +1390,14 @@ echo "##########################################################################
 
 a=$(service --status-all |grep fail |wc -l)
 if [ $a -ne 0 ]
-then
+ then
 	echo "${green}Fail2ban est installé sur le serveur${normal}"
-else
+ else
         echo "${red}Votre système ne dispose pas de Fail2ban${normal}"
 fi
-
-
 }
 
 fonct_rap () {
-
 #date du jour
 DATE=`date +"%d-%m-%d_%H-%M"`
   fonct_uname > Rapport_du_$DATE.txt
@@ -1455,7 +1421,7 @@ select choix in \
    "Afficher les informations sur le parefeu"  \
    "Afficher les informations sur les disques"  \
    "Véririer le paramétrage du serveur SSH"  \
-   "Vérifier les critères de l'ANSSI "  \
+   "Vérifier les critères de l'ANSSI"  \
    "Vérifier fail2ban"\
    "Génèrer un fichier rapport de toutes les options ci-dessus"  \
    "Abandon"
@@ -1477,6 +1443,3 @@ do
       *) echo "Fonction non implémentée"  ;;
    esac
 done
-
-
-
